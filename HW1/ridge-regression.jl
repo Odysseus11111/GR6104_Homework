@@ -26,4 +26,9 @@ function mc_ridge(m,n,beta,sigma,Sigma)
         push!(beta_fit_total,beta_fit)
     
     end
+    beta_fit_matrix = hcat(beta_fit_total...)
+    mean_beta_fit = mean(beta_fit_total,dim =2)
+    bias = mean_beta_fit .- beta
+    var_fit = var(mean_beta_fit,dim=2)
+    return bias,var_fit
 end
