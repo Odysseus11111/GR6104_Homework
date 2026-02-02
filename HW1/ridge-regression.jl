@@ -17,3 +17,13 @@ function generate_data(n,beta,sigma,Sigma)
     return X,Y
 end
 
+function mc_ridge(m,n,beta,sigma,Sigma) 
+    beta_fit_total = []
+    for i in 1:m
+        
+        X,Y= generate_data(n,beta,sigma,Sigma)
+        beta_fit = ridge_regression(X,Y,y)
+        push!(beta_fit_total,beta_fit)
+    
+    end
+end
