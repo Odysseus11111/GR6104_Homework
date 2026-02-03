@@ -2,7 +2,7 @@
 """ First we define the empirical distribution functions empi_df, which calculates the 
 result of the average value of 1[X_i<=t] 
 """
-function empi_df(val::Vector,t::Real)
+function empi_df(val::AbstractVector{<:Real},t::Real)
     n = length(val)
     count = 0
     for x in val
@@ -17,7 +17,7 @@ end
 This function sorts the input `val` and computes the maximum distance 
 between the empircial CDF F and the theoretical CDF H
 """
-function ks_func(val::Vector,func::Function)
+function ks_func(val::AbstractVector{<:Real},func::Function)
     n = length(val)
     sorted_val = sort(val)
     max_val = 0.0
