@@ -17,7 +17,7 @@ end
 This function sorts the input `val` and computes the maximum distance 
 between the empircial CDF F and the theoretical CDF H
 """
-function ks_func(val::Vector,any_func::Function)
+function ks_func(val::Vector,func::Function)
     n = length(val)
     sorted_val = sort(val)
     max_val = 0.0
@@ -25,7 +25,7 @@ function ks_func(val::Vector,any_func::Function)
 
     for i in 1:n
         x_i = sorted_val[i]
-        H_val = any_func(x_i)
+        H_val = func(x_i)
         max_val = max(max_val, abs(i/n-H_val),abs((i-1)/n-H_val))
     end
     return max_val
