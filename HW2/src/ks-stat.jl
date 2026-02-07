@@ -1,33 +1,13 @@
-
-""" First we define the empirical distribution functions empi_df, which calculates the 
-result of the average value of 1[X_i<=t] 
+"""We write a function ks_func which can calculate the KS statistic, the function
+should receive input from samples X_i's and samples Y_i's.
 """
-function empi_df(val::AbstractVector{<:Real},t::Real)
-    n = length(val)
-    count = 0
-    for x in val
-        if x<=t
-            count +=1
-        end
-    end
-
-    return count/n
-end
-"""Next, we write a function ks_func which can calculate the KS statistic.
-This function sorts the input `val` and computes the maximum distance 
-between the empircial CDF F and the theoretical CDF H
-"""
-function ks_func(val::AbstractVector{<:Real},func::Function)
-    n = length(val)
+function ks_func(X::AbstractVector,Y::AbstractVector)
+    n = length(X)
+    m =length(Y)
+    labeled_x =[(val,x_val) for val in X]
+    labeled_y =[(val,y_val) for val in y]
+    combined_val = vcat(labeled_x,labeled_y)
     sorted_val = sort(val)
     max_val = 0.0
-    
 
-    for i in 1:n
-        x_i = sorted_val[i]
-        H_val = func(x_i)
-        max_val = max(max_val, abs(i/n-H_val),abs((i-1)/n-H_val))
-    end
-    return max_val
 end
-
