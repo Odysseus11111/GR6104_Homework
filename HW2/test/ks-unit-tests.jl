@@ -1,36 +1,36 @@
 using Test
 include("C:/Users/Odysseus/GR6104_Homework/HW2/src/ks-stat.jl")
 @testset "KS Statistics implementation tests" verbose=true begin
-    H = t -> t
-    # 1. Simple Examples    
-    @testset "empi_df function test" begin
-        data = [1,2,3,4]
-        @test empi_df(data,0) == 0
-        @test empi_df(data,5) == 1
-        @test empi_df(data,2.5) == 0.5
-        @test empi_df(data,2) == 0.5
+    
+    # 1. Simple Examples            
+    @testset "ks_func: Simple Examples" begin
+            x_1= [1,2]
+            y_1= [1,2]
+            @test ks_func(x_1,y_1) == 0.0
+
+            x_2 = [1,2,3]
+            y_2 = [4,5,6]
+            @test ks_func(x_2,y_2) == 1
+
+            x_3 = [1,2,3,4]
+            x_4 = [3,4,5,6,7] 
+            @test ks_func(x_3,x_4) ==0.5
+
         end
-        @testset "ks_func: Simple Examples" begin
-            
-            @test ks_func([0.5],H)==0.5
-            @test isapprox(ks_func([0.2], H), 0.8; atol=1e-12)
-            @test isapprox(ks_func([0.2,0.8], H), 0.3; atol=1e-12)
-        end
-    # 2. Corner Cases, we consider the Case 1 Unsorted input, Case 2 Duplicate input 
-            # Case 3 all the values are identical， Case 4: the data that perform uniform distribution
-    @testset "Corner Cases" begin
-        @test isapprox(ks_func([0.8, 0.2], H), 0.3; atol=1e-12)
-        @test ks_func([0.5, 0.5], H) == 0.5
-        @test ks_func([0.5, 0.5, 0.5], H) == 0.5
-        uniform_data = [0.1, 0.3, 0.5, 0.7, 0.9]
-        @test isapprox(ks_func(uniform_data, H), 0.1; atol=1e-12)
+
+    # 2. Corner Cases
+    @testset "ks_func: Corner Cases" begin
+
+        @test ks_func([1,1,1],[1,1,1]) == 10
+
+        @test ks_func([1],[1]) == 0
+
+        @test ks_func([10],[1,2,3,4,5,6,7,8,9,10]) == 1
+
+        neg_x = [-1,-2,-3,-4] 
+        neg_y = [-1,2,-3,4]
+        @test ks_func(neg_x,neg_y) ==0.75
+
     end
-    # 3. Squashing Bugs, I have made the one-sided logic error 
-        # Calculating distance only at the step top value |i/n - H(x)|
-        # while neglecting the step bottom value |(i-1)/n - H(x)|
-        #If we forgot to consider the other side, the function incorrectly returns 0.1.
-    @testset "Squashing Bugs" begin
-        one_sided_val = [0.9]
-        @test isapprox(ks_func(one_sided_val, H), 0.9;atol=1e-12)
-    end
+        
 end
