@@ -22,7 +22,8 @@ include("C:/Users/Odysseus/GR6104_Homework/HW2/src/ks-stat.jl")
         @test ks_func(neg_x,neg_y) ==0.5
 
     end
-    @testset "Squashing Bugs: Ties and Edge Cases" begin
+    # 3. Squashing Bugs
+    @testset "Squashing Bugs" begin
         @test ks_func([1, 2, 2], [1, 2, 2]) == 0.0
         x_int = [1,2]
         y_float = [1.0, 2.0]
