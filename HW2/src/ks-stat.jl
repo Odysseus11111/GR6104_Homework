@@ -25,5 +25,6 @@ function ks_func(X::AbstractVector,Y::AbstractVector)
             max_diff = combined_val
         end
     end
+    
     return max_diff
 end
