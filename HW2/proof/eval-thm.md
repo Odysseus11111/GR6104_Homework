@@ -1,21 +1,58 @@
-# Proof of Theorem :
+# Proof: 
+
+### 
+We want to prove that:
+$$\sup_{t \in \mathbb{R}} | \hat{F}_X(t) - \hat{H}_Y(t) | = \max_{t \in \mathcal{X}} | \hat{F}_X(t) - \hat{H}_Y(t) |$$
+
+The combined data set be $\mathcal{X} = \{X_1, \dots, X_n, Y_1, \dots, Y_m\}$.
+Let $Z_1 \le Z_2 \le \dots \le Z_r$ be the sorted order of all points in $\mathcal{X}$, the total size is $r = n + m$.
+
+Define the difference function:
+$$D(t) = | \hat{F}_X(t) - \hat{H}_Y(t) |$$
+
+The definitions of the empirical CDFs:
+$$\hat{F}_X(t) = \frac{1}{n} \sum_{i=1}^n \mathbb{1}[X_i \le t], \quad \hat{H}_Y(t) = \frac{1}{m} \sum_{i=1}^m \mathbb{1}[Y_i \le t]$$
+
+### Boundary Cases Analysis
+**Case 1:($t \ge Z_r$)**
+Consider the interval $[Z_r, \infty)$.
+Since $Z_r$ is the maximum of all data points, for any $t \ge Z_r$, we have $t \ge X_i$ for all $i$ and $t \ge Y_j$ for all $j$.
+Therefore, the indicator functions are all equal to 1:
+$$\hat{F}_X(t) = 1 \quad \text{and} \quad \hat{H}_Y(t) = 1$$
+Thus, the difference is:
+
+$$D(t) = |1 - 1| = 0 \quad \text{for } t \in [Z_r, \infty)$$
+
+**Case 2: Left Tail ($t < Z_1$)**
+Consider the interval $(-\infty, Z_1)$.
+Since $Z_1$ is the minimum, for any $t < Z_1$, we have $t < X_i$ and $t < Y_j$ for all the points.
+Therefore, the indicator functions are all equal to 0:
+$$\hat{F}_X(t) = 0 \quad \text{and} \quad \hat{H}_Y(t) = 0$$
+Therefore the difference is:
+$$D(t) = |0 - 0| = 0 \quad \text{for } t \in (-\infty, Z_1)$$
+
+**Case 2: Data in between**
+Consider an arbitrary interval $I_i = [Z_i, Z_{i+1})$ for $1 \le i < r$.
+For any $t$ such that $Z_i \le t < Z_{i+1}$, no new points appear strictly between $Z_i$ and $Z_{i+1}$. Therefore, the set of data points less than or equal to $t$ is exactly equal to the data points less than or equal to $Z_i$.
+Therefore,
+
+$$\hat{F}_X(t) = \hat{F}_X(Z_i) \quad \text{(let this be constant } C_1)$$
+$$\hat{H}_Y(t) = \hat{H}_Y(Z_i) \quad \text{(let this be constant } C_2)$$
+
+The difference function $D(t)$ is also constant:
+$$\forall t \in [Z_i, Z_{i+1}), \quad D(t) = |C_1 - C_2| = | \hat{F}_X(Z_i) - \hat{H}_Y(Z_i) | = D(Z_i)$$
 
 
-Let $X_{(1)} \le X_{(2)} \le \dots \le X_{(n)}$ be the order statistics of the sample $\{X_1, \dots, X_n\}$. Define $X_{(0)} = -\infty$ and $X_{(n+1)} = \infty$.
+We can decompose the real line $\mathbb{R}$ into the partition defined by the sorted points $Z$:
+$$\sup_{t \in \mathbb{R}} D(t) = \max \left( \sup_{t < Z_1} D(t), \quad \max_{1 \le i < r} \left( \sup_{t \in [Z_i, Z_{i+1})} D(t) \right), \quad \sup_{t \ge Z_r} D(t) \right)$$
 
-The empirical CDF $\hat{F}_X(t)$ is a step function that is constant on the interval $[X_{(i)}, X_{(i+1)})$. We have:
-$$
-\hat{F}_X(t) = \frac{i}{n} \quad \text{for } t \in [X_{(i)}, X_{(i+1)})
-$$
-for $i = 0, \dots, n$ (where $\hat{F}_X(t) = 0$ for $t < X_{(1)}$ and $\hat{F}_X(t) = 1$ for $t \ge X_{(n)}$).
+By:
+* $\sup_{t < Z_1} D(t) = 0$
+* $\sup_{t \ge Z_r} D(t) = 0$
+* $\sup_{t \in [Z_i, Z_{i+1})} D(t) = D(Z_i)$ (Since it is constant on the interval)
 
-The difference function $D(t) = \hat{F}_X(t) - H(t)$ on a specific interval $[X_{(i)}, X_{(i+1)})$.
-On this interval, $\hat{F}_X(t)$ is constant (equal to $\frac{i}{n}$).
-Since $H(t)$ is an increasing function,
-Therefore, $D(t) = \frac{i}{n} - H(t)$ is a monotonically decreasing function on this interval.
+We can have:
+$$\sup_{t \in \mathbb{R}} | \hat{F}_X(t) - \hat{H}_Y(t) | = \max_{i=1, \dots, r} | \hat{F}_X(Z_i) - \hat{H}_Y(Z_i) |$$
 
-Because $D(t)$ is monotonic, the maximum absolute difference $|D(t)|$ on the closure of $[X_{(i)}, X_{(i+1)}]$ must occur at one of the endpoints. i.e :
-the supremum over the interval is:
-$$
-\sup_{t \in [X_{(i)}, X_{(i+1)})} |D(t)| = \max \left( \left| \hat{F}_X(X_{(i)}) - H(X_{(i)}) \right|, \lim_{t \to X_{(i+1)}^-} \left| \hat{F}_X(t) - H(t) \right| \right)
-$$, which proved the conclusion.
+Since $\{Z_1, \dots, Z_r\}$ is exactly the set $\mathcal{X}$, the theorem is proven:
+$$\sup_{t \in \mathbb{R}} | \hat{F}_X(t) - \hat{H}_Y(t) | = \max_{t \in \mathcal{X}} | \hat{F}_X(t) - \hat{H}_Y(t) | \quad \square$$
