@@ -17,7 +17,9 @@ The definitions of the empirical CDFs:
 $$\hat{F}_X(t) = \frac{1}{n} \sum_{i=1}^n \mathbb{1}[X_i \le t], \quad \hat{H}_Y(t) = \frac{1}{m} \sum_{i=1}^m \mathbb{1}[Y_i \le t]$$
 
 ### Boundary Cases Analysis
+
 **Case 1:($t \ge Z_r$)**
+
 Consider the interval $[Z_r, \infty)$.
 Since $Z_r$ is the maximum of all data points, for any $t \ge Z_r$, we have $t \ge X_i$ for all $i$ and $t \ge Y_j$ for all $j$.
 Therefore, the indicator functions are all equal to 1:
@@ -29,6 +31,7 @@ Thus, the difference is:
 $$D(t) = |1 - 1| = 0 \quad \text{for } t \in [Z_r, \infty)$$
 
 **Case 2: Left Tail ($t < Z_1$)**
+
 Consider the interval $(-\infty, Z_1)$.
 Since $Z_1$ is the minimum, for any $t < Z_1$, we have $t < X_i$ and $t < Y_j$ for all the points.
 Therefore, the indicator functions are all equal to 0:
@@ -39,7 +42,8 @@ Therefore the difference is:
 
 $$D(t) = |0 - 0| = 0 \quad \text{for } t \in (-\infty, Z_1)$$
 
-**Case 2: Data in between**
+**Case 3: Data in between**
+
 Consider an arbitrary interval $I_i = [Z_i, Z_{i+1})$ for $1 \le i < r$.
 For any $t$ such that $Z_i \le t < Z_{i+1}$, no new points appear strictly between $Z_i$ and $Z_{i+1}$. Therefore, the set of data points less than or equal to $t$ is exactly equal to the data points less than or equal to $Z_i$.
 Therefore,
