@@ -4,29 +4,28 @@ include("C:/Users/Odysseus/GR6104_Homework/HW2/src/ks-stat.jl")
     
     # 1. Simple Examples            
     @testset "ks_func: Simple Examples" begin
-            x_1= [1,2]
-            y_1= [1,2]
-            @test ks_func(x_1,y_1) == 0.0
-
-            x_3 = [1,2,3,4]
-            x_4 = [3,4,5,6,7] 
-            @test ks_func(x_3,x_4) ==0.6
-
+        @test ks_func([1, 2], [1, 2]) == 0.0
+        @test ks_func([1, 2], [10, 11]) == 1.0
+        x_1 = [1,2,3,4]
+        y_1 = [3,4,5,6,7] 
+        @test ks_func(x_1, y_1) == 0.6
         end
 
     # 2. Corner Cases
     @testset "ks_func: Corner Cases" begin
+        @test ks_func([1], [1]) == 0
 
-        @test ks_func([1,1,1],[1,1,1]) == 0
-
-        @test ks_func([1],[1]) == 0
-
-        @test ks_func([1, 2], [100, 101]) == 1.0
+        @test isapprox(ks_func([10], collect(1:10)), 0.9)
 
         neg_x = [-1,-2,-3,-4] 
         neg_y = [-1,2,-3,4]
         @test ks_func(neg_x,neg_y) ==0.5
 
     end
-        
+    @testset "Squashing Bugs: Ties and Edge Cases" begin
+        @test ks_func([1, 2, 2], [1, 2, 2]) == 0.0
+        x_int = [1,2]
+        y_float = [1.0, 2.0]
+        @test ks_func(x_int, y_float) == 0.0
+    end
 end
