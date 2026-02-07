@@ -11,7 +11,9 @@ include("C:/Users/Odysseus/GR6104_Homework/HW2/src/ks-stat.jl")
         @test ks_func(x_1, y_1) == 0.6
         end
 
-    # 2. Corner Cases
+    # 2. Corner Cases:
+    #I include the single-element arrays and comparison between a single value and a range.
+    #And ensures the function handles negative numbers correctly.
     @testset "ks_func: Corner Cases" begin
         @test ks_func([1], [1]) == 0
 
@@ -20,13 +22,18 @@ include("C:/Users/Odysseus/GR6104_Homework/HW2/src/ks-stat.jl")
         neg_x = [-1,-2,-3,-4] 
         neg_y = [-1,2,-3,4]
         @test ks_func(neg_x,neg_y) ==0.5
+        end
 
+    # 3. Squashing Bugs 
+    #I initially overlooked the edge case where multiple values are exactly equal. 
+    #This caused the code to calculate the mean prematurely without including all the duplicate numbers. 
+    #The 'Squashing Bugs' test case helped me identify this issue.
+    # I fixed it by adding a loop that checks for duplicates and ensures the mean is calculated only 
+    #after all identical values (ties) are added to the cumulative sum.
+        @testset "Squashing Bugs" begin
+            @test ks_func([1, 2, 2], [1, 2, 2]) == 0.0
+            x_int = [1,2]
+            y_float = [1.0, 2.0]
+            @test ks_func(x_int, y_float) == 0.0
+        end
     end
-    # 3. Squashing Bugs
-    @testset "Squashing Bugs" begin
-        @test ks_func([1, 2, 2], [1, 2, 2]) == 0.0
-        x_int = [1,2]
-        y_float = [1.0, 2.0]
-        @test ks_func(x_int, y_float) == 0.0
-    end
-end
