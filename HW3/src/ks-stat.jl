@@ -3,6 +3,50 @@ also receive input from samples X_i's and samples Y_i's.
 """
 
 
+# Implementation for the alternatives parallel function 
+function ks_func_parallel(X::AbstractVector, Y::AbstractVector)
+    # We spawn a task to sort Y on a separate thread
+    y_task = Threads.@spawn sort(Y)
+    sx =sort(X)
+    sy = fetch(y_task)::Vector{Float64} #Wait for Y to finish the sorting and fetch the result
+    i =1
+    j =1
+    cdf_x =0
+    cdf_y =0
+    n = length(sx)
+    m = length(sy)
+    max_diff= 0
+
+    while i<=n || j<=m 
+        if i>n
+            current_val = sy[j]
+        elseif j>m
+            current_val = sx[i]
+        else 
+            current_val = min(sx[i],sy[j])
+        end
+    
+
+        while i <=n && sx[i]== current_val #??current_val_x == sort_x[i]
+            cdf_x +=1/n
+            i+=1
+        end
+
+        while j <=m && sy[j]== current_val
+            cdf_y +=1/m
+            j+=1
+        end
+
+        curr_diff = abs(cdf_x-cdf_y)
+        if curr_diff > max_diff
+            max_diff =curr_diff
+        end
+
+    end
+
+    return max_diff
+end
+
 # Implementation for the alternatives two-pointer function 
 
 
@@ -86,4 +130,4 @@ function ks_func(X::AbstractVector,Y::AbstractVector)
 end
 
 
-const ks_func = ks_func_2pt
+const ks_func = ks_func_parallel
