@@ -1,0 +1,15 @@
+Test Summary:                                                                   | Pass  Total  Time
+KS Statistics Iterative Version 2 Optimization using parallel method unit tests |    8      8  1.4s
+  ks_func_parallel: Simple Examples                                             |    3      3  0.1s
+  ks_func_parallel: Corner Cases                                                |    3      3  0.0s
+  Squashing Bugs                                                                |    2      2  1.3s
+Test Summary:                                                             | Pass  Total  Time
+KS Statistics Iterative Version 1 using 2-pointer Optimization unit tests |    8      8  0.1s
+  ks_func_2pt: Simple Examples                                            |    3      3  0.1s
+  ks_func_2pt: Corner Cases                                               |    3      3  0.0s
+  Squashing Bugs                                                          |    2      2  0.1s
+Test Summary:                                       | Pass  Total  Time
+KS Statistics Original Version implementation tests |    8      8  0.0s
+  ks_func: Simple Examples                          |    3      3  0.0s
+  ks_func: Corner Cases                             |    3      3  0.0s
+  Squashing Bugs                                    |    2      2  0.0s

@@ -8,7 +8,7 @@ function ks_func_parallel(X::AbstractVector, Y::AbstractVector)
     # We spawn a task to sort Y on a separate thread
     y_task = Threads.@spawn sort(Y)
     sx =sort(X)
-    sy = fetch(y_task)::Vector{Float64} #Wait for Y to finish the sorting and fetch the result
+    sy = fetch(y_task)::Vector{eltype(Y)} #Wait for Y to finish the sorting and fetch the result
     i =1
     j =1
     cdf_x =0
