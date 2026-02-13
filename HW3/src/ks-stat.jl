@@ -1,4 +1,4 @@
-"""We combined the ks_func_2pt function together with ks_func which will increase the improvement. The new function
+"""We combined the ks_func_parallel, ks_func_2pt function together with ks_func, which further improve performance. The new function
 also receive input from samples X_i's and samples Y_i's.
 """
 
@@ -93,7 +93,7 @@ function ks_func_2pt(X::AbstractVector,Y::AbstractVector)
 
 end        
 
-
+#Original Function from HW2
 function ks_func(X::AbstractVector,Y::AbstractVector)
     n = length(X)
     m =length(Y)
@@ -128,6 +128,3 @@ function ks_func(X::AbstractVector,Y::AbstractVector)
 
     return max_diff
 end
-
-
-const ks_func = ks_func_parallel

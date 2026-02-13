@@ -1,9 +1,7 @@
 using Test
-include("C:/Users/Odysseus/GR6104_Homework/HW3/src/ks-stat.jl")
+include("../src/ks-stat.jl")
 
-
-
-@testset "KS Statistics Iterative Version 2 Optimization using parallel method unit tests" verbose=true begin
+@testset "KS Statistics Iterative Version_2 Optimization using parallel method unit tests" verbose=true begin
     
     # 1. Simple Examples            
     @testset "ks_func_parallel: Simple Examples" begin
@@ -44,7 +42,7 @@ include("C:/Users/Odysseus/GR6104_Homework/HW3/src/ks-stat.jl")
 
 
 
-@testset "KS Statistics Iterative Version 1 using 2-pointer Optimization unit tests" verbose=true begin
+@testset "KS Statistics Iterative Version 1 using 2-pointer Method Optimization unit tests" verbose=true begin
     
     # 1. Simple Examples            
     @testset "ks_func_2pt: Simple Examples" begin
