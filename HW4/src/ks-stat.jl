@@ -42,8 +42,9 @@ function ks_func_2pt(X::AbstractVector,Y::AbstractVector)
 end        
 
 
-
+using Random 
 function calculate_c(m,n,alpha)
+    Random.seed!(123)
     c = sqrt((1/2)*log(2/alpha)*(n+m)/(n*m))
     return c
 end
