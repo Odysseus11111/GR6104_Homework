@@ -41,10 +41,37 @@ function ks_func_2pt(X::AbstractVector,Y::AbstractVector)
 
 end        
 
-
+# calculate_c
 using Random 
 function calculate_c(m,n,alpha)
     Random.seed!(123)
     c = sqrt((1/2)*log(2/alpha)*(n+m)/(n*m))
     return c
 end
+
+
+#This a serial function which estimates Pr(S > c(α))\
+function serial_func(m,n,alpha,r)
+    Random.seed!(123)
+    c_val = calculate_c(m,n,alpha)
+    count = 0
+    for _ in 1:r
+        X = randn(m)
+        Y = randn(n)
+        ks = ks_func_2pt(X,Y)
+
+        if ks > c_val
+            count +=1
+        end
+    end
+    return count/r
+end
+
+n=1000
+m=1000
+alpha = 0.05
+r = 1000
+result = serial_func(m,n,alpha,r)
+println("Estimated Type I Error: ",result)
+
+#
