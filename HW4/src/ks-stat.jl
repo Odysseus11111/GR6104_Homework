@@ -3,7 +3,6 @@ using Random
 Threads.nthreads()
 
 function ks_func_2pt(X::AbstractVector,Y::AbstractVector)
-
     max_diff= 0
     cdf_x = 0
     cdf_y = 0
@@ -22,9 +21,7 @@ function ks_func_2pt(X::AbstractVector,Y::AbstractVector)
         else 
             current_val = min(sort_x[i],sort_y[j])
         end
-    
-
-        while i <=n && sort_x[i]== current_val #??current_val_x == sort_x[i]
+        while i <=n && sort_x[i]== current_val #Not current_val_x == sort_x[i]
             cdf_x +=1/n
             i+=1
         end
@@ -33,12 +30,11 @@ function ks_func_2pt(X::AbstractVector,Y::AbstractVector)
             cdf_y +=1/m
             j+=1
         end
-
         curr_diff = abs(cdf_x-cdf_y)
+
         if curr_diff > max_diff
             max_diff =curr_diff
         end
-
     end
 
     return max_diff
@@ -51,7 +47,6 @@ function calculate_c(m,n,alpha)
     c = sqrt((1/2)*log(2/alpha)*(n+m)/(n*m))
     return c
 end
-
 
 #This a serial function which estimates Pr(S > c(α))\
 function serial_func(m,n,alpha,r)
@@ -85,7 +80,6 @@ function parallel_func(m,n,alpha,r)
     c_val = calculate_c(m,n,alpha)
     chunk_size =cld(r,Threads.nthreads())
     chunk = Iterators.partition(1:r,chunk_size)
-    
     tasks = map(chunk) do chunk
         Threads.@spawn begin
             count  = 0

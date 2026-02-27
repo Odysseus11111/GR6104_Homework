@@ -9,7 +9,7 @@ include("jackknife.jl")
 r =5000
 sigma = 1
 d =20
-nmax = 300
+nmax = 1200
 ns= collect(round.(Int,range(100,nmax,length=10))) 
 
 exp_error_ini = zeros(length(ns))
