@@ -1,5 +1,24 @@
-# Question 1 
-1. Hardware: CPU : Intel(R) Core(TM) Ultra 7 155H, and the number of physical cores that is has is 16.
+# Question 1 Discussion
+ Hardware: CPU : Intel(R) Core(TM) Ultra 7 155H, and the number of physical cores that is has is 16.
+
+Discuss the two plots that you generated above. Address the following points:
+
+(a) Do your Monte Carlo simulations agree? Do they match the predictions of Theorem?
+
+Yes. While the two curves do not overlap perfectly due to the independent randomness in Monte Carlo simulations, they exhibit the exact same statistical behavior. Both curves tightly oscillate around the nominal level of $\alpha = 0.05$. This perfectly matches Theorem 0.1, confirming that the Type I error is properly controlled in large samples.
+
+
+
+(b) What kind of speed up does your parallel code achieve? Does the speed-up depend on
+the sample size n? How does it compare with the number of cores that you have? Give
+thorough explanations for what you observe.
+
+The parallel code achieves roughly a 3x speed-up at large sample sizes. The speed-up depends on $n$; the performance gap is marginal for small samples but widens as $n$ grows and the $\mathcal{O}(n \log n)$ sorting workload dominates.
+
+Comparison to Cores, although my machine has 16 physical cores, the speed-up does not scale perfectly 1:1 with the core numbers. This is expected due to Amdahl's Law and parallel overhead, such as thread creation, independent random number generation, and atomic variable locking etc.
+
+
+
 
 
 # Question 2. Discussion

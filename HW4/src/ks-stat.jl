@@ -1,3 +1,7 @@
+using Revise
+using Random
+Threads.nthreads()
+
 function ks_func_2pt(X::AbstractVector,Y::AbstractVector)
 
     max_diff= 0
@@ -42,7 +46,6 @@ function ks_func_2pt(X::AbstractVector,Y::AbstractVector)
 end        
 
 # calculate_c
-using Random 
 function calculate_c(m,n,alpha)
     Random.seed!(123)
     c = sqrt((1/2)*log(2/alpha)*(n+m)/(n*m))
@@ -74,4 +77,31 @@ r = 1000
 result = serial_func(m,n,alpha,r)
 println("Estimated Type I Error: ",result)
 
-#
+#This is a parallel function that estimates Pr(S > c(α))
+#Avoid race condition
+
+function parallel_func(m,n,alpha,r)
+    Random.seed!(123)
+    c_val = calculate_c(m,n,alpha)
+    chunk_size =cld(r,Threads.nthreads())
+    chunk = Iterators.partition(1:r,chunk_size)
+    
+    tasks = map(chunk) do chunk
+        Threads.@spawn begin
+            count  = 0
+            for _ in chunk 
+                X = randn(m)
+                Y = randn(n)
+                ks = ks_func_2pt(X,Y)
+                if ks > c_val
+                    count +=1
+                end
+            end
+        return count
+        end
+    end
+    chunks = sum(fetch.(tasks))
+    total_sum = chunks/r
+    return total_sum
+end
+

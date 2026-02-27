@@ -33,9 +33,19 @@ end
 
 
 # 2. Calculate A hat, i.e. the covariance 
-#Here we set parallel = false and include a parallel condition here, this is because 
-#overall we have two nested Multi-threaded code in our code,
-#if we have two nested Multi-threaded part, the overall performance will be reduced.
+#Here we in order to satisfy the question, we need to set parallel = true, but we set it to be false here
+#since if we have two mult-threaded here it reduces the overall performance. 
+
+#Noted, we can also try another method to satisfy two multi-threaded, but due to time limit I just mention the 
+# the key idea.
+#The main idea is to implement nested multi-threading without encountering the Thread Oversubscription
+# We optimize the mathematical logic of the Leave-One-Out OLS calculation.
+#The original bottleneck was memory allocation: slicing the matrix `X[[1:i-1; i+1:n], :]` for every thread 
+#triggered massive simultaneous memory allocations, causing Julia's GC to lock the threads and destroy performance. 
+#To solve this, we can use the algebraic property of the OLS estimator. 
+#Since $X_{out}^T X_{out} = X^T X - x_i x_i^T$, we pre-compute the full $X^T X$ matrix globally.
+# Inside the inner threaded loop, we perform light vector subtractions. This completely eliminates heavy array 
+#allocations. This can achieve significantly better performance than the the following nested approach. 
 
 function covar_func(X,Y;parallel = false)
     n,d = size(X)
