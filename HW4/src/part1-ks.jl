@@ -53,5 +53,5 @@ plot!(p2,ns,time_parallel,
 display(p1)
 display(p2)
 
-savefig(p1, "../fig/type1_error_plot.png")
-savefig(p2, "../fig/elapsed_time_plot.png")
+savefig(p1, joinpath(@__DIR__, "../fig/type1_error_plot.png"))
+savefig(p2, joinpath(@__DIR__, "../fig/elapsed_time_plot.png"))
