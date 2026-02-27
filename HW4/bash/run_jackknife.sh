@@ -12,3 +12,5 @@ module load Julia
 cd ../src
 
 julia --threads=50 part2-jackknife.jl
+
+

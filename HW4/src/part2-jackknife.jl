@@ -1,16 +1,16 @@
-using Revise
 using Statistics
 using Plots
 using Random
 
 Threads.nthreads()
-includet("../src/jackknife.jl")
+include("jackknife.jl")
 
 
 r =5000
 sigma = 1
 d =20
-ns= collect(round.(Int,range(100,500,length=10))) 
+nmax = 3000
+ns= collect(round.(Int,range(100,nmax,length=10))) 
 
 exp_error_ini = zeros(length(ns))
 time_records = zeros(length(ns))
@@ -42,9 +42,7 @@ p2= plot(ns, time_records,
 )
 
 final_plot =plot(p1,p2,layout=(1,2))
-display(final_plot)
-
 max_num = maximum(ns)
-mkpath("HW4/fig")
-savefig(final_plot, "HW4/fig/error_time_plots_n$(max_num).png")
+mkpath("../fig")
+savefig(final_plot, "../fig/error_time_plots_n$(nmax).png")
 
