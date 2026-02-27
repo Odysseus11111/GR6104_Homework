@@ -1,0 +1,11 @@
+GKS: cannot open display - headless operation mode active
+n =100; Covariance Error:0.9965; Time_records:5.18s
+n =222; Covariance Error:0.9978; Time_records:9.03s
+n =344; Covariance Error:0.9984; Time_records:13.55s
+n =467; Covariance Error:0.9987; Time_records:17.86s
+n =589; Covariance Error:0.9989; Time_records:22.76s
+n =711; Covariance Error:0.9991; Time_records:27.85s
+n =833; Covariance Error:0.9992; Time_records:33.31s
+n =956; Covariance Error:0.9993; Time_records:39.18s
+n =1078; Covariance Error:0.9993; Time_records:44.01s
+n =1200; Covariance Error:0.9994; Time_records:50.63s
