@@ -2,6 +2,7 @@
 
 # 2.1 Create Data Write a function to generate covariates X that are in isotropic position
 using LinearAlgebra
+using Statistics
 
 function iso_func(n,d)
     H = randn(n,d)
@@ -32,36 +33,45 @@ end
 
 
 # 2. Calculate A hat, i.e. the covariance 
-function covar_func(X,Y)
+#Here we set parallel = false and include a parallel condition here, this is because 
+#overall we have two nested Multi-threaded code in our code,
+#if we have two nested Multi-threaded part, the overall performance will be reduced.
+
+function covar_func(X,Y;parallel = false)
     n,d = size(X)
     betas = zeros(d,n)
-    for i in 1:n
-        betas[:,i] = ols_est_func(X,Y,i)
-    end 
-
-    beta_avg = mean(betas,dims =2)
+    if parallel
+        Threads.@threads for i in 1:n
+            betas[:,i] = ols_est_func(X,Y,i)
+        end
+    else 
+        for i in 1:n
+            betas[:,i] = ols_est_func(X,Y,i)
+        end
+    end
+    
+    beta_avg = vec(mean(betas,dims =2))
     A_sum = zeros(d,d)
     for i in 1:n
         A = (betas[:,i]-beta_avg)*(betas[:,i]-beta_avg)'
         A_sum += A
     end
-    A = ((n-1)/n) * A_sum
+    A = (1/(n-1)) * A_sum
     
     return A
 end
 
 # 3. Error
-# 思路 A hat 就是你刚刚求的 A 是 the true one
-function error_jk(X,beta_i,sigma,r)
+function error_jk(X,beta_true,sigma,r)
 
     n,d = size(X)
-    @assert length(beta_i) == d
+    @assert length(beta_true) == d
     error_ini = zeros(r)   
-    covar_true = sigma^2* inv(X'* X)
+    covar_true = (sigma^2/n) * Matrix(I, d, d)
 
     Threads.@threads for i in 1:r
         noise = sigma * randn(n)
-        Y = X * beta_i + noise
+        Y = X * beta_true + noise
         covar_jk = covar_func(X,Y)
         norm_diff = opnorm(covar_jk - covar_true)
         error_ini[i] = norm_diff
