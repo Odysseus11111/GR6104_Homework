@@ -3,11 +3,11 @@
 #SBATCH --job-name=hw4_jackknife
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=50
-#SBATCH --mem-per-cpu=200M
+#SBATCH --mem-per-cpu=3G
 #SBATCH --time=02:00:00
 #SBATCH --output=slurm-%j.out
 
-module load Julia
+module load julia
 
 cd ../src
 
