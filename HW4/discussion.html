@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>discussion.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="question-1-discussion">Question 1 Discussion</h1>
+<p>Hardware: CPU : Intel(R) Core(TM) Ultra 7 155H, and the number of physical cores that is has is 16.</p>
+<p>Discuss the two plots that you generated above. Address the following points:</p>
+<p>(a) Do your Monte Carlo simulations agree? Do they match the predictions of Theorem?</p>
+<p>Yes. While the two curves do not overlap perfectly due to the independent randomness in Monte Carlo simulations, they exhibit the exact same statistical behavior. Both curves tightly oscillate around the nominal level of $\alpha = 0.05$. This perfectly matches Theorem 0.1, confirming that the Type I error is properly controlled in large samples.</p>
+<p>(b) What kind of speed up does your parallel code achieve? Does the speed-up depend on
+the sample size n? How does it compare with the number of cores that you have? Give
+thorough explanations for what you observe.</p>
+<p>The parallel code achieves roughly a 3x speed-up at large sample sizes. The speed-up depends on $n$; the performance gap is marginal for small samples but widens as $n$ grows and the $\mathcal{O}(n \log n)$ sorting workload dominates.</p>
+<p>Comparison to Cores, although my machine has 16 physical cores, the speed-up does not scale perfectly 1:1 with the core numbers. This is expected due to Amdahl's Law and parallel overhead, such as thread creation, independent random number generation, and atomic variable locking etc.</p>
+<h1 id="question-2-discussion">Question 2. Discussion</h1>
+<p>(a) How does the error behave as $n$ grows?</p>
+<p>As $n$ increases from 100 to 500, the expectation covariance error steadily grows but exhibits a concave shape. This behavior reflects that the covariance estimation stabilizes and the error relative to the true covariance converges.</p>
+<p>(b) How long does your code take to run? How does the running time depend on the sample size $n$?</p>
+<p>On my machine, the elapsed time per sample size grows from tens of seconds for small to over 300 seconds when n=500.
+The running time exhibits a quadratic relationship with the sample size $n$ ($\mathcal{O}(n^2)$).But noted that there is a noticeable jump around $n=300$. This might be due toe the system/performance effects.
+This quadratic behavior occurs because of the mechanics of the Jackknife method. For a dataset of $n$, the algorithm leaves one observation out and recalculates OLS estimate $n$ separate times. Since computing a single OLS estimate involves matrix operations time $\mathcal{O}(n \cdot d^2)$, repeating this process $n$ times leads to an overall computational complexity that scales with $n^2$.</p>
+<p>(c) Rough estimate for the sample size $n_{max}$ requiring 2 hours:</p>
+<p>From the local plot, computing $n = 500$ took approximately 335 seconds. Thus, the constant is: $$c = \frac{335}{500^2} = 0.00134$$</p>
+<p>The total time $T_{total}$ for 10 evenly spaced points is:
+$$T_{total} = \sum_{i=1}^{10} c \cdot \left(i \cdot \frac{n_{max}}{10}\right)^2 = c \cdot \frac{n_{max}^2}{100} \sum_{i=1}^{10} i^2$$</p>
+<p>Given that $\sum_{i=1}^{10} i^2 = 385$, the total time simplifies to:
+$$T_{total} = 3.85 \cdot c \cdot n_{max}^2$$</p>
+<p>Setting the target total time to 2 hours (7,200 seconds):</p>
+<p>$$
+n_{max} \approx 1181
+$$</p>
+<p>Therefore we set $n_{\max} = 1200$.</p>
+<h1 id="question-3">Question 3.</h1>
+<p>(a) How does the error behave as $n$ grows?</p>
+<p>As $n$ grows, the expectation covariance error steadily increases but at a decelerating rate. It approaches near 1.0. This behavior demonstrates the statistical consistency of the Jackknife estimator.</p>
+<p>(b) How long does the code take to run? How does runtime depend on $n$?</p>
+<p>On the HPC cluster, the entire script (from $n=100$ to $n=1200$) takes approximately 5 minutes to run in total. The text output log indicates that the final and largest simulation step ($n=1200$) took roughly 50 seconds to
+complete.
+The running time of the simulation depends quadratically on the sample size. This relationship is illustrated in the plot, which forms a parabolic curve. This aligns with the algorithmic complexity of the Jackknife estimator: because the algorithm performs $n$ leave-one-out OLS estimations for each of the $r$ Monte Carlo simulations, the computational cost scales at $\mathcal{O}(n^2)$.</p>
+<p>(c) Compare the cluster plots to the plots generated on your machine. Explain differences.</p>
+<p>When comparing the local plots ($n_{max}=500$) with the cluster plots ($n_{max}=1200$), there are two major differences：</p>
+<p>(1)In the local plot, the sample size only goes up to $n=500$. And the expectation covariance error is still in a relatively steep climbing phase. However, in the cluster's error plot, we can clearly observe the curve flattening out, which provides strong empirical evidence of the estimator's statistical consistency over large sample sizes.
+(2) While both time plots correctly exhibit the $\mathcal{O}(n^2)$ parabolic shape, their Y-axis scales are vastly different due to hardware capabilities. On the local machine, computing the final iteration of $n=500$ took over 330 seconds. However, the cluster computed $n=1200$ in just 80 seconds. Given the $\mathcal{O}(n^2)$ complexity, This demonstrates how the 50 HPC cores successfully distributed the heavy leave-one-out loops.</p>
+
+</body>
+</html>
