@@ -1,5 +1,6 @@
 using LinearAlgebra
 
+#1. Construct Factorization
 function choley_fac(A)
     # Check whether A is positive definite matrix
     if !(issymmetric(A) && all(eigvals(A).>0))
@@ -25,6 +26,7 @@ function choley_fac(A)
     return L
 end
 
+# 2. Linear System Solve
 function forward_cho(L,b)
     n = length(b)
     y= zeros(n)
@@ -37,6 +39,7 @@ function forward_cho(L,b)
     end
     return y
 end
+
 
 function backward_cho(U,y)
     n = length(y)
@@ -51,8 +54,31 @@ function backward_cho(U,y)
     return x
 end
 
+# Combine the forward and backward cholesky method to get x
 function cholesky_solve(L,b)
     y = forward_cho(L,b)
     x = backward_cho(L',y)
     return x
+end
+
+# 3.Low Rank Update
+function low_rank(L, v)
+    L_new = float.(copy(L))
+    v_curr = float.(copy(v)) 
+    n = size(L_new, 1)
+    for j in 1:n
+        r = sqrt(L_new[j,j]^2+ v_curr[j]^2)
+        co = L_new[j,j]/r
+        si = v_curr[j]/r
+        L_new[j,j] = r
+        for i in (j+1):n
+            L_orig = L_new[i,j]
+            v_orig = v_curr[i]
+# Do the rotation
+            L_new[i,j] = co*L_orig + si*v_orig
+            v_curr[i]  = co*v_orig -si*L_orig
+        end
+    end
+
+    return L_new
 end
