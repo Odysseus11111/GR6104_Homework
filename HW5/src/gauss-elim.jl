@@ -1,28 +1,26 @@
-
-# To calculate x using gauss elimination method, we need two steps:
+# To calculate x using Gaussian elimination, we need two steps:
 #   (1) Forward elimination
-#   (2) Backward backward substitution
-# First, we look at the value in diagonal of A after forward elimination, 
-# if A[k,k] == 0 then output error, if it doesn't go wrong, we pass A to 
-# do backward substitution.
+#   (2) Backward substitution
+# During forward elimination, we check whether the pivot A[k,k] is zero.
+# If a zero pivot is encountered, the algorithm throws an error.
+# Otherwise, we use backward substitution to solve for x.
 
 function gauss_elimi(A,b)
+    size(A,1) == size(A,2) || error("A is not a square matrix!")
+    length(b) == size(A,1) || error("Dimension does not match!")
     A_cal = float.(copy(A))
     b_cal = float.(copy(b))
     A_forward, b_forward = forward_elim(A_cal,b_cal)
-    n = length(b)
-    for k in 1:n
-        if A_forward[k,k] ==0.0
-        error("Error! No such x exists")
-        end
-    end
-        x = backward_sub(A_forward,b_forward)
+    x = backward_sub(A_forward,b_forward)
     return x
 end
 
 function forward_elim(A,b)
     n = length(b)
     for k in 1:n-1
+        if A[k,k]==0.0
+            error("Zero pivot !!!")
+        end 
         for i in k+1:n
             factor = A[i,k]/A[k,k]
             for j in k:n
@@ -38,6 +36,9 @@ function backward_sub(A,b)
     n = length(b)
     x= zeros(n)
     for i in n:-1:1
+        if A[i,i]==0.0
+            error("Zero diagonal!")
+        end
         temp_sum = 0.0
         for j in i+1:n
             temp_sum += A[i,j]*x[j]

@@ -3,6 +3,7 @@ using LinearAlgebra
 #1. Construct Factorization
 function choley_fac(A)
     # Check whether A is positive definite matrix
+    size(A,1)==size(A,2) || error("A must be a square matrix")
     if !(issymmetric(A) && all(eigvals(A).>0))
         error("The matrix A is not positive definite!")
     else 
@@ -28,6 +29,8 @@ end
 
 # 2. Linear System Solve
 function forward_cho(L,b)
+    size(L,1) == size(L,2) || error("L must be square")
+    length(b) == size(L,1) || error("Dimension mismatch")
     n = length(b)
     y= zeros(n)
     for i in 1:n
@@ -42,6 +45,8 @@ end
 
 
 function backward_cho(U,y)
+    size(U,1) == size(U,2) || error("U must be square")
+    length(y) == size(U,1) || error("Dimension mismatch")
     n = length(y)
     x= zeros(n)
     for i in n:-1:1
@@ -56,6 +61,8 @@ end
 
 # Combine the forward and backward cholesky method to get x
 function cholesky_solve(L,b)
+    size(L,1) == size(L,2) || error("L must be square")
+    length(b) == size(L,1) || error("Dimension mismatch")
     y = forward_cho(L,b)
     x = backward_cho(L',y)
     return x
@@ -63,6 +70,7 @@ end
 
 # 3.Low Rank Update
 function low_rank(L, v)
+    length(v) == size(L,1) || error("Dimension mismatch")
     L_new = float.(copy(L))
     v_curr = float.(copy(v)) 
     n = size(L_new, 1)
@@ -81,5 +89,5 @@ function low_rank(L, v)
     end
 
     return L_new
-    
+
 end

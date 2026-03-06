@@ -123,8 +123,7 @@ includet("../src/gauss-elim.jl")
                 # Zero Division
                 A_zero = [2.0 1.0; 0.0 0.0]
                 b_zero = [5.0; 2.0]
-                x_calc = backward_sub(A_zero, b_zero)
-                @test isinf(x_calc[2]) 
+                @test_throws ErrorException backward_sub(A_zero, b_zero)
         
         end
 

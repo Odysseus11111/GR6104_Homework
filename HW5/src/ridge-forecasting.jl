@@ -5,6 +5,8 @@ include("cholesky-factors.jl")
 # 1. Naive Implementation
 function naive_ridge(X, Y, gamma)
     T,d=size(X)
+    length(Y) == T || error("Dimension mismatch")
+    gamma > 0 || error("gamma must be >0")
     Y_hat=zeros(T)
     I_d=Matrix{Float64}(I, d, d) 
     for t in 1:T
@@ -28,6 +30,8 @@ end
 # 2.Fast Implementation
 function fast_ridge(X, Y, gamma)
     T,d=size(X)
+    length(Y) == T || error("Dimension mismatch")
+    gamma > 0 || error("gamma must be >0")
     Y_hat=zeros(T)
     L=sqrt(gamma)*Matrix{Float64}(I, d, d)
     b=zeros(d)

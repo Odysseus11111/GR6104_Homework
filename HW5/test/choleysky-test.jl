@@ -65,7 +65,7 @@ includet("../src/cholesky-factors.jl")
             # Check BoundsError
             L_dim=[1.0 0.0; 0.0 1.0]
             b_dim=[1.0; 2.0; 3.0]
-            @test_throws BoundsError cholesky_solve(L_dim, b_dim)
+            @test_throws ErrorException cholesky_solve(L_dim, b_dim)
         end
     end
 
