@@ -22,8 +22,37 @@ function choley_fac(A)
             end
         end
     end
-    return L  
+    return L
 end
 
-function forward_cho(A,b)
+function forward_cho(L,b)
+    n = length(b)
+    y= zeros(n)
+    for i in 1:n
+        temp_sum = 0.0
+        for j in 1:i-1
+            temp_sum += L[i,j]*y[j]
+        end 
+        y[i]=(b[i]-temp_sum)/L[i,i]
+    end
+    return y
+end
+
+function backward_cho(U,y)
+    n = length(y)
+    x= zeros(n)
+    for i in n:-1:1
+        temp_sum = 0.0
+        for j in i+1:n
+            temp_sum += U[i,j]*x[j]
+        end 
+        x[i]=(y[i]-temp_sum)/U[i,i]
+    end
+    return x
+end
+
+function cholesky_solve(L,b)
+    y = forward_cho(L,b)
+    x = backward_cho(L',y)
+    return x
 end
