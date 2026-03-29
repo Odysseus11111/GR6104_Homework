@@ -1,0 +1,659 @@
+\documentclass{article}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx} % Required for inserting images
+
+\title{6104_HW6}
+\author{Odysseus Zhang}
+\date{March 2026}
+
+\begin{document}
+\subsection*{1(a) Convexity}
+
+We want to show that the log-likelihood function
+\[
+f(\theta)=\sum_{i=1}^n \left[y_i \log h(\theta^\top x_i) + (1-y_i)\log\bigl(1-h(\theta^\top x_i)\bigr)\right]
+\]
+is concave, where
+\[
+h(t)=\frac{1}{1+e^{-t}}.
+\]
+
+First, note that
+\[
+h(\theta^\top x_i)=\frac{1}{1+e^{-\theta^\top x_i}}.
+\]
+Hence
+\[
+f(\theta)
+=
+\sum_{i=1}^n
+\left[
+y_i \log\left(\frac{1}{1+e^{-\theta^\top x_i}}\right)
++
+(1-y_i)\log\left(1-\frac{1}{1+e^{-\theta^\top x_i}}\right)
+\right].
+\]
+
+We compute the gradient:
+\[
+\nabla f(\theta)
+=
+\sum_{i=1}^n
+\left[
+y_i \cdot \frac{1}{h(\theta^\top x_i)} \nabla h(\theta^\top x_i)
++
+(1-y_i)\cdot \frac{1}{1-h(\theta^\top x_i)} \nabla\bigl(1-h(\theta^\top x_i)\bigr)
+\right].
+\]
+Since
+\[
+\nabla h(\theta^\top x_i)=h(\theta^\top x_i)\bigl(1-h(\theta^\top x_i)\bigr)x_i,
+\]
+we obtain
+\[
+\nabla f(\theta)
+=
+\sum_{i=1}^n
+\left[
+y_i(1-h(\theta^\top x_i))x_i-(1-y_i)h(\theta^\top x_i)x_i
+\right].
+\]
+Therefore,
+\[
+\nabla f(\theta)
+=
+\sum_{i=1}^n x_i\bigl(y_i-h(\theta^\top x_i)\bigr).
+\]
+
+Now we differentiate again. Since \(y_i\) is constant with respect to \(\theta\),
+\[
+\nabla^2 f(\theta)
+=
+-\sum_{i=1}^n x_i \bigl(\nabla h(\theta^\top x_i)\bigr)^\top.
+\]
+Using
+\[
+\nabla h(\theta^\top x_i)
+=
+h(\theta^\top x_i)\bigl(1-h(\theta^\top x_i)\bigr)x_i,
+\]
+it follows that
+\[
+\nabla^2 f(\theta)
+=
+-\sum_{i=1}^n h(\theta^\top x_i)\bigl(1-h(\theta^\top x_i)\bigr)x_i x_i^\top.
+\]
+Equivalently, since
+\[
+h(\theta^\top x_i)\bigl(1-h(\theta^\top x_i)\bigr)
+=
+\frac{e^{-\theta^\top x_i}}{(1+e^{-\theta^\top x_i})^2},
+\]
+we can also write
+\[
+\nabla^2 f(\theta)
+=
+-\sum_{i=1}^n
+\frac{e^{-\theta^\top x_i}}{(1+e^{-\theta^\top x_i})^2}\, x_i x_i^\top.
+\]
+
+Now for any \(v\in\mathbb{R}^d\),
+\[
+v^\top \nabla^2 f(\theta) v
+=
+-\sum_{i=1}^n
+h(\theta^\top x_i)\bigl(1-h(\theta^\top x_i)\bigr)\, v^\top x_i x_i^\top v.
+\]
+Since
+\[
+v^\top x_i x_i^\top v = (x_i^\top v)^2 \ge 0,
+\]
+and
+\[
+h(\theta^\top x_i)\bigl(1-h(\theta^\top x_i)\bigr)\ge 0,
+\]
+we have
+\[
+v^\top \nabla^2 f(\theta) v
+=
+-\sum_{i=1}^n
+h(\theta^\top x_i)\bigl(1-h(\theta^\top x_i)\bigr)(x_i^\top v)^2
+\le 0.
+\]
+Therefore,
+\[
+\nabla^2 f(\theta)\preceq 0.
+\]
+Hence \(f(\theta)\) is concave. Equivalently, \(-f(\theta)\) is convex. \qed
+
+\subsection*{2(a) Gradient Calculation}
+
+\textbf{(i)} For a general link function \(h\), the log-likelihood is
+\[
+f(\theta)=\sum_{i=1}^n \left[y_i \log h(\langle x_i,\theta\rangle)+(1-y_i)\log\bigl(1-h(\langle x_i,\theta\rangle)\bigr)\right].
+\]
+Differentiating term by term gives
+\[
+\nabla f(\theta)
+=
+\sum_{i=1}^n
+\left[
+y_i \frac{h'(\langle x_i,\theta\rangle)}{h(\langle x_i,\theta\rangle)}x_i
+-
+(1-y_i)\frac{h'(\langle x_i,\theta\rangle)}{1-h(\langle x_i,\theta\rangle)}x_i
+\right].
+\]
+Factoring out \(x_i h'(\langle x_i,\theta\rangle)\), we get:
+\[
+\nabla f(\theta)
+=
+\sum_{i=1}^n
+x_i\,h'(\langle x_i,\theta\rangle)
+\left[
+\frac{y_i}{h(\langle x_i,\theta\rangle)}
+-
+\frac{1-y_i}{1-h(\langle x_i,\theta\rangle)}
+\right].
+\]
+Combining the two fractions,
+\[
+\frac{y_i}{h(\langle x_i,\theta\rangle)}
+-
+\frac{1-y_i}{1-h(\langle x_i,\theta\rangle)}
+=
+\frac{y_i-h(\langle x_i,\theta\rangle)}
+{h(\langle x_i,\theta\rangle)(1-h(\langle x_i,\theta\rangle))}.
+\]
+Therefore,
+\[
+\nabla f(\theta)
+=
+\sum_{i=1}^n
+x_i\,
+\frac{h'(\langle x_i,\theta\rangle)}
+{h(\langle x_i,\theta\rangle)(1-h(\langle x_i,\theta\rangle))}
+\Bigl(y_i-h(\langle x_i,\theta\rangle)\Bigr).
+\]
+
+\textbf{(ii)} For the canonical logit link
+\[
+h(\gamma)=\frac{1}{1+e^{-\gamma}},
+\]
+we differentiate to get
+\[
+h'(\gamma)=\frac{e^{-\gamma}}{(1+e^{-\gamma})^2}.
+\]
+Also,
+\[
+1-h(\gamma)=1-\frac{1}{1+e^{-\gamma}}
+=\frac{e^{-\gamma}}{1+e^{-\gamma}}.
+\]
+Hence
+\[
+h(\gamma)(1-h(\gamma))
+=
+\frac{1}{1+e^{-\gamma}}
+\cdot
+\frac{e^{-\gamma}}{1+e^{-\gamma}}
+=
+\frac{e^{-\gamma}}{(1+e^{-\gamma})^2}
+=
+h'(\gamma).
+\]
+
+\textbf{(iii)} Substituting \(h'(\gamma)=h(\gamma)(1-h(\gamma))\) into part (i), we obtain
+\[
+\nabla f(\theta)
+=
+\sum_{i=1}^n
+x_i \bigl(y_i-h(\langle x_i,\theta\rangle)\bigr).
+\]
+
+\subsection*{2(b) Hessian Calculation}
+
+From part (a)(iii), we have
+\[
+\nabla f(\theta)=\sum_{i=1}^n x_i\bigl(y_i-h(\langle x_i,\theta\rangle)\bigr).
+\]
+Hence the \(\ell\)-th component of the gradient is
+\[
+\frac{\partial f}{\partial \theta_\ell}
+=
+\sum_{i=1}^n x_i(\ell)\bigl(y_i-h(\langle x_i,\theta\rangle)\bigr).
+\]
+Now differentiate with respect to \(\theta_k\):
+\[
+\frac{\partial^2 f}{\partial\theta_k\partial\theta_\ell}
+=
+\sum_{i=1}^n
+\frac{\partial}{\partial\theta_k}
+\left[
+x_i(\ell)\bigl(y_i-h(\langle x_i,\theta\rangle)\bigr)
+\right].
+\]
+Since \(x_i(\ell)\) and \(y_i\) do not depend on \(\theta\), this becomes
+\[
+\frac{\partial^2 f}{\partial\theta_k\partial\theta_\ell}
+=
+-\sum_{i=1}^n x_i(\ell)\,
+\frac{\partial}{\partial\theta_k}h(\langle x_i,\theta\rangle).
+\]
+By chain rule,
+\[
+\frac{\partial}{\partial\theta_k}h(\langle x_i,\theta\rangle)
+=
+h'(\langle x_i,\theta\rangle)
+\frac{\partial}{\partial\theta_k}\langle x_i,\theta\rangle.
+\]
+Also,
+\[
+\langle x_i,\theta\rangle=\sum_{j=1}^d x_i(j)\theta_j,
+\]
+so
+\[
+\frac{\partial}{\partial\theta_k}\langle x_i,\theta\rangle=x_i(k).
+\]
+Therefore,
+\[
+\frac{\partial^2 f}{\partial\theta_k\partial\theta_\ell}
+=
+-\sum_{i=1}^n x_i(\ell)x_i(k)\,h'(\langle x_i,\theta\rangle).
+\]
+Since for the canonical logit link,
+\[
+h'(t)=h(t)(1-h(t)),
+\]
+we conclude
+\[
+\frac{\partial^2 f}{\partial\theta_k\partial\theta_\ell}
+=
+-\sum_{i=1}^n x_i(k)x_i(\ell)\,h(\langle x_i,\theta\rangle)\bigl(1-h(\langle x_i,\theta\rangle)\bigr).
+\]
+
+\subsection*{(c) Newton Update and Weighted Iterative Least Squares}
+\subsection*{(i)}
+Since we already have:
+\[
+\hat y_i=h(\langle x_i,\theta\rangle),
+\qquad
+\hat y=(\hat y_1,\dots,\hat y_n)^\top,
+\]
+and
+\[
+W=\operatorname{diag}\bigl(\hat y_1(1-\hat y_1),\dots,\hat y_n(1-\hat y_n)\bigr).
+\]
+Also, the design matrix is
+\[
+X=
+\begin{bmatrix}
+x_1^\top\\
+x_2^\top\\
+\vdots\\
+x_n^\top
+\end{bmatrix}.
+\]
+
+First, from part (a)(iii),
+\[
+\nabla f(\theta)=\sum_{i=1}^n x_i\bigl(y_i-h(\langle x_i,\theta\rangle)\bigr).
+\]
+Using \(\hat y_i=h(\langle x_i,\theta\rangle)\), we have
+\[
+\nabla f(\theta)=\sum_{i=1}^n x_i(y_i-\hat y_i).
+\]
+Now,
+\[
+\sum_{i=1}^n x_i y_i = X^\top y,
+\qquad
+\sum_{i=1}^n x_i \hat y_i = X^\top \hat y.
+\]
+Hence
+\[
+\nabla f(\theta)=X^\top y - X^\top \hat y = X^\top (y-\hat y).
+\]
+
+Next, from part (b),
+\[
+\frac{\partial^2 f}{\partial\theta_k\partial\theta_\ell}
+=
+-\sum_{i=1}^n x_i(k)x_i(\ell)\,\hat y_i(1-\hat y_i).
+\]
+On the other hand, the \((k,\ell)\)-entry of \(X^\top W X\) is
+\[
+(X^\top W X)_{k\ell}
+=
+\sum_{i=1}^n X_{ik}W_{ii}X_{i\ell}.
+\]
+Since
+\[
+X_{ik}=x_i(k),
+\qquad
+X_{i\ell}=x_i(\ell),
+\qquad
+W_{ii}=\hat y_i(1-\hat y_i),
+\]
+it follows that
+\[
+(X^\top W X)_{k\ell}
+=
+\sum_{i=1}^n x_i(k)\hat y_i(1-\hat y_i)x_i(\ell).
+\]
+Therefore,
+\[
+\frac{\partial^2 f}{\partial\theta_k\partial\theta_\ell}
+=
+-(X^\top W X)_{k\ell}.
+\]
+Since this holds for all \(k,\ell\), we conclude
+\[
+\nabla^2 f(\theta)=-X^\top W X.
+\]
+\textbf{(ii)} We want to show that the Newton direction
+\[
+d=-\bigl[\nabla^2 f(\theta)\bigr]^{-1}\nabla f(\theta)
+\]
+is the solution to the weighted least squares problem
+\[
+d=\arg\min_d \sum_{i=1}^n w_{ii}\bigl(z_i-\langle x_i,d\rangle\bigr)^2.
+\]
+
+From part (c)(i), we have
+\[
+\nabla^2 f(\theta)=-X^\top W X
+\qquad\text{and}\qquad
+\nabla f(\theta)=X^\top(y-\hat y).
+\]
+Therefore,
+\[
+d
+=
+-\bigl[\nabla^2 f(\theta)\bigr]^{-1}\nabla f(\theta)
+=
+-\bigl[-X^\top W X\bigr]^{-1}X^\top(y-\hat y).
+\]
+Since
+\[
+\bigl[-X^\top W X\bigr]^{-1}=-(X^\top W X)^{-1},
+\]
+it follows that
+\[
+d
+=
+(X^\top W X)^{-1}X^\top(y-\hat y).
+\]
+Also, by definition,
+\[
+z=W^{-1}(y-\hat y),
+\]
+so
+\[
+y-\hat y=Wz.
+\]
+Substituting this into the above expression gives
+\[
+d
+=
+(X^\top W X)^{-1}X^\top W z.
+\]
+
+Now consider the weighted least squares objective
+\[
+Q(d)=\sum_{i=1}^n w_{ii}\bigl(z_i-\langle x_i,d\rangle\bigr)^2.
+\]
+In matrix form, it can be written as
+\[
+Q(d)=(z-Xd)^\top W(z-Xd).
+\]
+We get
+\[
+Q(d)
+=
+z^\top W z-z^\top WXd-d^\top X^\top W z+d^\top X^\top W X d.
+\]
+Since \(z^\top WXd\) is a scalar, we have
+\[
+z^\top WXd=d^\top X^\top W z.
+\]
+Hence
+\[
+Q(d)
+=
+z^\top W z-2d^\top X^\top W z+d^\top X^\top W X d.
+\]
+
+Now differentiate with respect to \(d\):
+\[
+\nabla_d Q(d)
+=
+-2X^\top W z+2X^\top W X d.
+\]
+Setting the gradient equal to zero gives
+\[
+-2X^\top W z+2X^\top W X d=0,
+\]
+so
+\[
+X^\top W X d=X^\top W z.
+\]
+Assuming \(X^\top W X\) is invertible, we obtain
+\[
+d=(X^\top W X)^{-1}X^\top W z.
+\]
+
+This is exactly the same expression as the Newton direction. Therefore, the Newton direction is the solution to the weighted least squares problem
+\[
+d=\arg\min_d \sum_{i=1}^n w_{ii}\bigl(z_i-\langle x_i,d\rangle\bigr)^2.
+\]
+
+
+\subsection*{3. Computational Runtime}
+
+\textbf{Evaluation of the log-likelihood \(f(\theta)\).}
+\\ Since 
+\[
+f(\theta)
+=
+\sum_{i=1}^n
+\left[
+y_i \log h(\langle x_i,\theta\rangle)
++
+(1-y_i)\log\bigl(1-h(\langle x_i,\theta\rangle)\bigr)
+\right].
+\]
+For each \(i\), computing the inner product \(\langle x_i,\theta\rangle\) requires \(O(d)\) operations.  
+Then evaluating \(h(\langle x_i,\theta\rangle)\), the logarithms, and the remaining scalar arithmetic requires \(O(1)\) operations.  
+Thus each summand costs \(O(d)\), and since there are \(n\) summands, the total runtime is
+\[
+O(nd).
+\]
+
+\textbf{Evaluation of the gradient \(\nabla f(\theta)\).}
+\\ Since
+\[
+\nabla f(\theta)=\sum_{i=1}^n x_i\bigl(y_i-h(\langle x_i,\theta\rangle)\bigr),
+\]
+for each \(i\), we first compute \(\langle x_i,\theta\rangle\), which costs \(O(d)\).  
+Then computing \(h(\langle x_i,\theta\rangle)\) and the scalar \(y_i-h(\langle x_i,\theta\rangle)\) costs \(O(1)\).  
+Finally, multiplying the vector \(x_i\in\mathbb{R}^d\) by this scalar and adding it to the running sum costs \(O(d)\).  
+Hence each term costs \(O(d)\), and over all \(n\) observations the total runtime is
+\[
+O(nd).
+\]
+
+\textbf{Evaluation of the Hessian \(\nabla^2 f(\theta)\).}
+
+Using
+\[
+\nabla^2 f(\theta)
+=
+-\sum_{i=1}^n
+h(\langle x_i,\theta\rangle)\bigl(1-h(\langle x_i,\theta\rangle)\bigr)\,x_i x_i^\top,
+\]
+for each \(i\), computing \(\langle x_i,\theta\rangle\) costs \(O(d)\), and evaluating the scalar factor
+\[
+h(\langle x_i,\theta\rangle)\bigl(1-h(\langle x_i,\theta\rangle)\bigr)
+\]
+costs \(O(1)\).  
+The outer product \(x_i x_i^\top\) is a \(d\times d\) matrix, and forming it requires \(O(d^2)\) operations.  
+Scaling this matrix and adding it to the running Hessian also costs \(O(d^2)\).  
+Therefore each summand costs \(O(d^2)\), and over all \(n\) observations the total runtime is
+\[
+O(nd^2).
+\]
+
+\textbf{Computation of the Newton direction.}
+
+The Newton direction is
+\[
+d=-\bigl[\nabla^2 f(\theta)\bigr]^{-1}\nabla f(\theta).
+\]
+To compute it, we need:
+
+\begin{itemize}
+    \item the gradient, which costs \(O(nd)\),
+    \item the Hessian, which costs \(O(nd^2)\),
+    \item solving a linear system with a \(d\times d\) matrix, which costs \(O(d^3)\).
+\end{itemize}
+
+Hence the total runtime is
+\[
+O(nd)+O(nd^2)+O(d^3)=O(nd^2+d^3).
+\]
+\subsection*{4. Bonus Problems}
+
+Recall that the negative log-likelihood is
+\[
+h(\theta)=-f(\theta).
+\]
+From the previous parts, we know that
+\[
+\nabla^2 f(\theta)=-X^\top W(\theta)X,
+\]
+where
+\[
+W(\theta)=\operatorname{diag}\bigl(\hat y_1(1-\hat y_1),\dots,\hat y_n(1-\hat y_n)\bigr),
+\qquad
+\hat y_i=h(\langle x_i,\theta\rangle).
+\]
+Hence
+\[
+\nabla^2 h(\theta)=-\nabla^2 f(\theta)=X^\top W(\theta)X.
+\]
+
+\textbf{(i) \(h\) is not \(m\)-strongly convex for any \(m>0\).}
+
+Suppose, for contradiction, that \(h\) is \(m\)-strongly convex for some \(m>0\). Then for every \(\theta\),
+\[
+\nabla^2 h(\theta)\succeq mI_d.
+\]
+Equivalently, for every \(v\in\mathbb{R}^d\),
+\[
+v^\top \nabla^2 h(\theta)v \ge m\|v\|_2^2.
+\]
+
+Now fix any \(v\in\mathbb{R}^d\). Since
+\[
+\nabla^2 h(\theta)=X^\top W(\theta)X,
+\]
+we have
+\[
+v^\top \nabla^2 h(\theta)v
+=
+v^\top X^\top W(\theta)Xv
+=
+(Xv)^\top W(\theta)(Xv)
+=
+\sum_{i=1}^n \hat y_i(1-\hat y_i)\,(x_i^\top v)^2.
+\]
+For the logistic link,
+\[
+\hat y_i=\frac{1}{1+e^{-\langle x_i,\theta\rangle}},
+\qquad
+\hat y_i(1-\hat y_i)\to 0
+\quad\text{as}\quad
+|\langle x_i,\theta\rangle|\to\infty.
+\]
+
+Choose any nonzero vector \(u\in\mathbb{R}^d\), and let \(\theta=t u\) with \(t\to\infty\). Then for each \(i\),
+\[
+0\le \hat y_i(1-\hat y_i)\le \frac14,
+\qquad
+\hat y_i(1-\hat y_i)\to 0.
+\]
+Therefore,
+\[
+v^\top \nabla^2 h(tu)v
+=
+\sum_{i=1}^n \hat y_i(1-\hat y_i)\,(x_i^\top v)^2
+\longrightarrow 0
+\qquad\text{as } t\to\infty.
+\]
+But if \(h\) were \(m\)-strongly convex, we would have
+\[
+v^\top \nabla^2 h(tu)v \ge m\|v\|_2^2 >0
+\]
+for every \(t\), which is impossible since the left-hand side tends to \(0\). This contradiction shows that \(h\) is not \(m\)-strongly convex for any \(m>0\).
+
+\bigskip
+
+\textbf{(ii) Gradient Lipschitz property.}
+
+We now prove that \(\nabla h\) is Lipschitz with
+\[
+L\le \frac14 \lambda_{\max}(X^\top X).
+\]
+
+For the logistic link, for every \(i\),
+\[
+0\le \hat y_i(1-\hat y_i)\le \frac14.
+\]
+Hence
+\[
+0\preceq W(\theta)\preceq \frac14 I_n.
+\]
+Multiplying by \(X^\top\) on the left and \(X\) on the right gives
+\[
+0\preceq \nabla^2 h(\theta)=X^\top W(\theta)X \preceq \frac14 X^\top X.
+\]
+Therefore,
+\[
+\|\nabla^2 h(\theta)\|_2
+\le
+\left\|\frac14 X^\top X\right\|_2
+=
+\frac14 \|X^\top X\|_2
+=
+\frac14 \lambda_{\max}(X^\top X).
+\]
+
+Now let \(\theta,\theta'\in\mathbb{R}^d\). By the mean value theorem for vector-valued functions,
+\[
+\nabla h(\theta)-\nabla h(\theta')
+=
+\left(\int_0^1 \nabla^2 h\bigl(\theta'+t(\theta-\theta')\bigr)\,dt\right)(\theta-\theta').
+\]
+Taking norms and using the bound above,
+\[
+\|\nabla h(\theta)-\nabla h(\theta')\|_2
+\le
+\int_0^1
+\left\|\nabla^2 h\bigl(\theta'+t(\theta-\theta')\bigr)\right\|_2\,dt \;\|\theta-\theta'\|_2
+\]
+\[
+\le
+\int_0^1 \frac14 \lambda_{\max}(X^\top X)\,dt \;\|\theta-\theta'\|_2
+=
+\frac14 \lambda_{\max}(X^\top X)\,\|\theta-\theta'\|_2.
+\]
+Thus \(\nabla h\) is Lipschitz, with Lipschitz constant
+\[
+L\le \frac14 \lambda_{\max}(X^\top X).
+\]
+
+Therefore, \(h\) is not \(m\)-strongly convex for any \(m>0\), but it is \(L\)-gradient Lipschitz with
+\[
+L\le \frac14 \lambda_{\max}(X^\top X).
+\]
+\end{document}
