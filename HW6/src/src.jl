@@ -59,3 +59,30 @@ function gradient_ascent(y::Vector{Float64}, X::Matrix{Float64}, T_max::Int, alp
     end
     return theta,f_vals,etas,times
 end
+
+
+
+# Dampened Newton’s Method
+#that implements backtracking to select a step size.
+
+function hessian_func(X::Matrix{Float64},theta::Vector{Float64})
+    n,d = size(X)
+    H =zeros(d,d)
+    y_hat = zeros(n)
+    for i in 1:n
+        y_hat[i] = link_func(dot(X[i,:],theta))
+        for k in 1:d
+            for l in 1:d
+                H[k,l] += X[i,k]*y_hat[i]*(1 - y_hat[i])* X[i,l]
+            end
+        end
+    end  
+    return -H   
+end
+
+
+function newton_dir(X::Matrix{Float64},theta::Vector{Float64},y::Vector{Float64})
+    H = hessian_func(X,theta)
+    g =gradient_func(theta,X,y)
+    return -(1/H)*g
+end 
