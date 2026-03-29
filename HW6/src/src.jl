@@ -30,7 +30,7 @@ function f_func(theta::Vector{Float64},X::Matrix{Float64},y::Vector{Float64})
     end
     return val
 end
-function backtracking_ascent(theta::Vector{Float64}, g::Vector{Float64},X::Matrix{Float64}, y::Vector{Float64},alpha::Float64, beta::Float64)
+function backtracking_ascent_gradient(theta::Vector{Float64}, g::Vector{Float64},X::Matrix{Float64}, y::Vector{Float64},alpha::Float64, beta::Float64)
     eta = 1.0
     f_theta = f_func(theta, X, y)
     while f_func(theta + eta * g, X, y) < f_theta + alpha * eta * dot(g, g)
@@ -50,7 +50,7 @@ function gradient_ascent(y::Vector{Float64}, X::Matrix{Float64}, T_max::Int, alp
     for t in 1:T_max
         elapsed = @elapsed begin
             g = gradient_func(theta,X,y)
-            eta = backtracking_ascent(theta, g, X, y, alpha, beta)
+            eta = backtracking_ascent_gradient(theta, g, X, y, alpha, beta)
             theta = theta + eta*g
             etas[t] =eta
             f_vals[t+1] = f_func(theta,X,y)
@@ -84,5 +84,36 @@ end
 function newton_dir(X::Matrix{Float64},theta::Vector{Float64},y::Vector{Float64})
     H = hessian_func(X,theta)
     g =gradient_func(theta,X,y)
-    return -(1/H)*g
+    return -(H\g)
 end 
+
+function backtracking_ascent_newton(theta::Vector{Float64}, d::Vector{Float64},X::Matrix{Float64}, y::Vector{Float64},alpha::Float64, beta::Float64)
+    eta = 1.0
+    f_theta = f_func(theta, X, y)
+    f_gradient = gradient_func(theta, X,y)
+    while f_func(theta + eta * d, X, y) < f_theta + alpha * eta * dot(f_gradient,d)
+        eta *= beta
+    end
+    return eta
+end
+
+function newton_ascent(y::Vector{Float64}, X::Matrix{Float64}, T_max::Int, alpha::Float64, beta::Float64)
+    _,d = size(X)
+    theta = zeros(d)
+    f_vals =zeros(T_max +1)
+    etas = zeros(T_max)
+    times = zeros(T_max)
+    f_vals[1] = f_func(theta, X, y)
+
+    for t in 1:T_max
+        elapsed = @elapsed begin
+            d_newton =newton_dir(X,theta,y)
+            eta = backtracking_ascent_newton(theta, d_newton, X, y, alpha, beta)
+            theta = theta + eta*d_newton
+            etas[t] =eta
+            f_vals[t+1] = f_func(theta,X,y)
+        end
+        times[t] = elapsed
+    end
+    return theta,f_vals,etas,times
+end
