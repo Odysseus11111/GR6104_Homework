@@ -5,15 +5,41 @@
 
 using LinearAlgebra 
 
-function link_func(y)
-     return 1/(1+exp(-y))
+function link_func(z::Float64)
+    if z >= 0
+        return 1.0 / (1.0 + exp(-z))
+    else
+        e_val = exp(z)
+        return e_val / (1.0 + e_val)
+    end
 end
+
+function softplus(z::Float64)
+    if z > 0
+        return z + log1p(exp(-z))
+    else
+        return log1p(exp(z))
+    end
+end
+
+
+function f_func(theta::Vector{Float64}, X::Matrix{Float64}, y::Vector{Float64})
+    n = length(y)
+    val = 0.0
+    for i in 1:n
+        eta = dot(@view(X[i, :]), theta)
+        val += y[i] * eta - softplus(eta)
+    end
+    return val
+end
+
 
 function predict_prob(theta::Vector{Float64}, X::Matrix{Float64})
     n = size(X, 1)
     y_hat = zeros(n)
     for i in 1:n
-        y_hat[i] = link_func(dot(@view X[i, :], theta))
+        xi =@view X[i, :]
+        y_hat[i] = link_func(dot(xi, theta))
     end
     return y_hat
 end
@@ -23,17 +49,6 @@ function gradient_func(theta::Vector{Float64},X::Matrix{Float64},y::Vector{Float
     return X' *(y-y_hat)
 end
 
-
-function f_func(theta::Vector{Float64},X::Matrix{Float64},y::Vector{Float64})
-    n =length(y)
-    val = 0.0
-    for i in 1:n
-        xi = @view X[i,:]
-        p = link_func(dot(xi,theta))
-        val += y[i]*log(p) + (1-y[i])*log(1-p)
-    end
-    return val
-end
 function backtracking_ascent(theta::Vector{Float64},d::Vector{Float64},X::Matrix{Float64},y::Vector{Float64},alpha::Float64,beta::Float64)
     eta = 1.0
     f_theta = f_func(theta, X, y)
@@ -77,8 +92,19 @@ end
 function newton_dir(X::Matrix{Float64},theta::Vector{Float64},y::Vector{Float64})
     H = hessian_func(X,theta)
     g =gradient_func(theta,X,y)
-    return -(H\g)
-end 
+
+    try 
+        return -(H\g)
+    catch e
+        if e isa SingularException
+            λ = 1e-6
+            return -((H - λ * I) \ g)
+        else
+            rethrow(e)
+        end
+    end
+end
+
 
 function newton_ascent(y::Vector{Float64}, X::Matrix{Float64}, T_max::Int, alpha::Float64, beta::Float64)
     _,d = size(X)
