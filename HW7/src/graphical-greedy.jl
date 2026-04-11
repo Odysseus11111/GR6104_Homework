@@ -16,8 +16,8 @@ function graphical_greedy(weighted_edge_list)
     a = IntDisjointSet(num_nodes)
 
     for i in 1:num_edges
-        x = selected_edges[i,1]
-        y = selected_edges[i,2]
+        x = Int(selected_edges[i,1])
+        y = Int(selected_edges[i,2])
         w = selected_edges[i,3]
         if !in_same_set(a,x,y)
             union!(a,x,y)
@@ -26,6 +26,6 @@ function graphical_greedy(weighted_edge_list)
         end
         
     end
-    return opt_val,mst
+    return mst,opt_val
 end
 
