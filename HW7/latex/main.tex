@@ -1,0 +1,361 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\begin{document}
+
+\section*{Par 1: Uniform are Linear}
+
+We will show that for every \(S\subseteq \Omega\),
+\[
+\{v_i:i\in S\}\text{ is linearly independent}
+\quad \Longleftrightarrow \quad
+|S|\le k.
+\]
+This proves that the uniform matroid is linear.
+
+
+Let \(S=\{i_1,\dots,i_t\}\subseteq \Omega\), where \(t=|S|\).
+
+We prove both directions.
+
+\medskip
+(1) If \(t>k\), then \(\{v_i:i\in S\}\) is linearly dependent.
+
+Since each \(v_i\in \mathbb R^k\), the set \(\{v_{i_1},\dots,v_{i_t}\}\) consists of \(t\) vectors in the \(k\)-dimensional space \(\mathbb R^k\). If \(t>k\), then no set of \(t\) vectors in \(\mathbb R^k\) can be linearly independent. Hence \(\{v_i:i\in S\}\) is linearly dependent.
+
+(2) If \(t\le k\), then \(\{v_i:i\in S\}\) is linearly independent.
+
+Consider the \(k\times t\) matrix:
+\[
+A=
+\begin{bmatrix}
+1 & 1 & \cdots & 1\\
+x_{i_1} & x_{i_2} & \cdots & x_{i_t}\\
+x_{i_1}^2 & x_{i_2}^2 & \cdots & x_{i_t}^2\\
+\vdots & \vdots & \ddots & \vdots\\
+x_{i_1}^{k-1} & x_{i_2}^{k-1} & \cdots & x_{i_t}^{k-1}
+\end{bmatrix}.
+\]
+We could take the first \(t\) rows of \(A\) which gives the \(t\times t\) submatrix
+\[
+B=
+\begin{bmatrix}
+1 & 1 & \cdots & 1\\
+x_{i_1} & x_{i_2} & \cdots & x_{i_t}\\
+x_{i_1}^2 & x_{i_2}^2 & \cdots & x_{i_t}^2\\
+\vdots & \vdots & \ddots & \vdots\\
+x_{i_1}^{t-1} & x_{i_2}^{t-1} & \cdots & x_{i_t}^{t-1}
+\end{bmatrix}.
+\]
+Its transpose is the Vandermonde matrix
+\[
+B^{T}=
+\begin{bmatrix}
+1 & x_{i_1} & x_{i_1}^2 & \cdots & x_{i_1}^{t-1}\\
+1 & x_{i_2} & x_{i_2}^2 & \cdots & x_{i_2}^{t-1}\\
+\vdots & \vdots & \vdots & \ddots & \vdots\\
+1 & x_{i_t} & x_{i_t}^2 & \cdots & x_{i_t}^{t-1}
+\end{bmatrix}.
+\]
+By the Vandermonde determinant formula given in the hint,
+\[
+\det(B^T)=\prod_{1\le p<q\le t}(x_{i_q}-x_{i_p}).
+\]
+Since \(x_1,\dots,x_n\) are distinct, the numbers
+\[
+x_{i_1},\dots,x_{i_t}
+\]
+are also distinct, so every \(x_{i_q}-x_{i_p}\) is nonzero. Therefore
+\[
+\det(B^T)\neq 0.
+\]
+Hence \(\det(B)\neq 0\) as well, since \(\det(B)=\det(B^T)\),its columns are linearly independent. Thus \(B\) is invertible
+
+Since \(B\) is a submatrix of \(A\), the columns of \(A\) are also linearly independent. Therefore
+\[
+\{v_{i_1},\dots,v_{i_t}\}
+\]
+is linearly independent.
+
+\medskip
+Combining the two parts, we have shown that
+\[
+\{v_i:i\in S\}\text{ is linearly independent}
+\quad \Longleftrightarrow \quad
+|S|\le k.
+\]
+Since \(S\in\mathcal I\) when \(|S|\le k\), it follows that
+\[
+S\in\mathcal I
+\quad \Longleftrightarrow \quad
+\{v_i:i\in S\}\text{ is linearly independent}.
+\]
+Therefore the uniform matroid is linear.
+
+
+
+\section*{Part 2: Graphical are Linear}
+We will show that for any $S\subseteq \Omega$,
+\[
+\{v_e:e\in S\}\text{ is linearly independent}
+\quad\Longleftrightarrow\quad
+S\text{ does not contain a cycle}.
+\]
+
+\noindent (1) If $S$ contains a cycle, then $\{v_e:e\in S\}$ is linearly dependent
+\\
+We first look at a cycle of size $3$, following the hint.
+
+Consider the cycle on nodes $\{1,2,3\}$ with oriented edges
+\[
+e_1:1\to 2,\qquad e_2:1\to 3,\qquad e_3:3\to 2.
+\]
+Then
+\[
+v_{e_1}=(1,-1,0),\qquad
+v_{e_2}=(1,0,-1),\qquad
+v_{e_3}=(0,1,-1).
+\]
+Let
+\[
+A=[\,v_{e_1}\ \ v_{e_2}\ \ v_{e_3}\,]
+=
+\begin{bmatrix}
+1&1&0\\
+-1&0&1\\
+0&-1&-1
+\end{bmatrix}.
+\]
+To check whether these column vectors are linearly independent, solve
+\[
+x_1(1,-1,0)+x_2(1,0,-1)+x_3(0,1,-1)=(0,0,0).
+\]
+Equivalently,
+\[
+A
+\begin{bmatrix}
+x_1\\x_2\\x_3
+\end{bmatrix}
+=
+\begin{bmatrix}
+0\\0\\0
+\end{bmatrix},
+\]
+that is,
+\[
+\begin{cases}
+x_1+x_2=0,\\
+-x_1+x_3=0,\\
+-x_2-x_3=0.
+\end{cases}
+\]
+Take for example
+\[
+x=
+\begin{bmatrix}
+1\\-1\\1
+\end{bmatrix}\neq
+\begin{bmatrix}
+0\\0\\0
+\end{bmatrix}.
+\]
+Then
+\[
+A x=0.
+\]
+So the homogeneous system has a nontrivial solution. Hence the column vectors of $A$ are linearly dependent. Equivalently,
+\[
+\det(A)=0,
+\]
+so $A$ is not invertible and its columns are linearly dependent.
+
+Therefore, a cycle of size $3$ gives linear dependence.
+
+\vspace{0.5em}
+
+Now consider a general cycle
+\[
+u_1,u_2,\dots,u_{k},u_1
+\]
+with edges
+\[
+e_1=(u_1,u_2),\quad
+e_2=(u_2,u_3),\quad
+\dots,\quad
+e_{k-1}=(u_{k-1},u_k),\quad
+e_k=(u_k,u_1).
+\]
+Orient these edges consistently around the cycle. Then each vertex appears exactly once with coefficient $+1$ and exactly once with coefficient $-1$, so
+\[
+v_{e_1}+v_{e_2}+\cdots+v_{e_k}=0.
+\]
+This is a nontrivial linear relation, so the set
+\[
+\{v_{e_1},v_{e_2},\dots,v_{e_k}\}
+\]
+is linearly dependent.
+
+Hence, if $S$ contains a cycle, then $\{v_e:e\in S\}$ is linearly dependent.
+\vspace{1em}
+\\
+
+\noindent (2) If $S$ does not contain a cycle, then $\{v_e:e\in S\}$ is linearly independent
+
+Assume now that $S$ is acyclic. The subgraph formed by $S$ is a forest.  
+We first prove the statement for a tree, by induction, following the hint.
+
+\subsubsection*{Step 1: Trees}
+
+We prove that if $S$ is the edge set of a tree, then $\{v_e:e\in S\}$ is linearly independent.
+
+1.Base case.
+Consider the tree with two nodes and one edge:
+\[
+1-2.
+\]
+Let
+\[
+e_1=(1,2).
+\]
+Then
+\[
+v_{e_1}=(1,-1).
+\]
+If
+\[
+x_1v_{e_1}=0,
+\]
+then
+\[
+x_1(1,-1)=(0,0),
+\]
+which implies $x_1=0$. So $\{v_{e_1}\}$ is linearly independent.
+
+Using the same style as above, one may also write
+\[
+A=[\,v_{e_1}\,]
+=
+\begin{bmatrix}
+1\\
+-1
+\end{bmatrix},
+\qquad
+A[x_1]=0
+\quad\Longrightarrow\quad
+x_1=0.
+\]
+So the base case is proved.
+
+\paragraph{Small example.}
+Take the tree
+\[
+1-2-3,
+\]
+with edges
+\[
+e_1=(1,2),\qquad e_2=(2,3).
+\]
+Then
+\[
+v_{e_1}=(1,-1,0),\qquad
+v_{e_2}=(0,1,-1).
+\]
+So
+\[
+A=[\,v_{e_1}\ \ v_{e_2}\,]
+=
+\begin{bmatrix}
+1&0\\
+-1&1\\
+0&-1
+\end{bmatrix}.
+\]
+If
+\[
+A
+\begin{bmatrix}
+x_1\\x_2
+\end{bmatrix}
+=0,
+\]
+then
+\[
+x_1v_{e_1}+x_2v_{e_2}=0,
+\]
+that is,
+\[
+x_1(1,-1,0)+x_2(0,1,-1)=(0,0,0).
+\]
+Looking at the first coordinate gives $x_1=0$, and then the third coordinate gives $x_2=0$. Hence these columns are linearly independent.
+
+\paragraph{Inductive step.}
+Let $S$ be the edge set of a tree with $n$ nodes.
+
+Since every finite tree has a leaf, there exists a leaf $u$ in the tree. Let $e$ be the unique edge incident to $u$.
+
+Suppose
+\[
+\sum_{i\in S} x_i v_i=0.
+\]
+We only consider the coordinate corresponding to the leaf $u$. Since $u$ is a leaf, only the vector corresponding to the unique incident edge $e$ can be nonzero in that coordinate. Thus, in the $u$-th coordinate,
+\[
+x_e\, v_e(u)=0.
+\]
+But $v_e(u)=1$ or $-1$, hence $v_e(u)\neq 0$, so necessarily
+\[
+x_e=0.
+\]
+
+Therefore, the coefficient of the edge $e$ must be zero. We can delete this edge and the leaf $u$. The remaining graph is still a tree, now with $n-1$ nodes. By the induction hypothesis, all remaining coefficients are also zero.
+
+Hence every coefficient in
+\[
+\sum_{i\in S} x_i v_i=0
+\]
+must be zero. Therefore, the vectors $\{v_e:e\in S\}$ are linearly independent for any tree.
+
+\subsubsection*{Step 2: Extend from trees to forests}
+
+Now let $S$ be a forest. Then $S$ is a disjoint union of trees:
+\[
+S=S_1\cup S_2\cup\cdots\cup S_k,
+\]
+where each $S_j$ is the edge set of a tree.
+
+Suppose
+\[
+\sum_{e\in S} x_e v_e=0.
+\]
+We can write this as
+\[
+\sum_{j=1}^k\ \sum_{e\in S_j} x_e v_e=0.
+\]
+Fix one component, say $S_j$. Since the forest is a disjoint union, the vectors outside of $S_j$ are zero on the coordinates which have the vertices as $j$-th tree. Therefore, if we only look at the coordinates of the $j$-th tree, we get
+\[
+\sum_{e\in S_j} x_e v_e=0.
+\]
+But $S_j$ is a tree, and from Step 1 we have proved that the corresponding vectors are linearly independent. Hence
+\[
+x_e=0\qquad \text{for all } e\in S_j.
+\]
+Since $j$ was arbitrary, this is true for every component. Therefore all coefficients are zero, so $\{v_e:e\in S\}$ is linearly independent.
+\\
+We proved both directions:
+
+\begin{itemize}[leftmargin=2em]
+    \item if $S$ contains a cycle, then $\{v_e:e\in S\}$ is linearly dependent;
+    \item if $S$ is acyclic, then $\{v_e:e\in S\}$ is linearly independent.
+\end{itemize}
+Hence
+\[
+\{v_e:e\in S\}\text{ is linearly independent}
+\quad\Longleftrightarrow\quad
+S\text{ does not contain a cycle}.
+\]
+Therefore the graphical matroid is linear.
+
+\end{document}
