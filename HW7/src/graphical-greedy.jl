@@ -12,8 +12,8 @@ function graphical_greedy(weighted_edge_list)
     num_nodes = Int(maximum(nodes))
 
     # Initialization 
-    mst = []
-    opt_val = 0
+    mst = Vector{Tuple{Int,Int,Float64}}()
+    opt_val = 0.0
     sort_edges = sortperm(weighted_edge_list[:,3],rev = true)
     selected_edges = weighted_edge_list[sort_edges,:]
     a = IntDisjointSet(num_nodes)
@@ -25,10 +25,13 @@ function graphical_greedy(weighted_edge_list)
         if !in_same_set(a,x,y)
             union!(a,x,y)
             opt_val += w
-            push!(mst,[x,y,w]) 
+            push!(mst, (x, y, w))
+            if length(mst) == num_nodes - 1
+                break
+            end
         end
-        
     end
-    return mst,opt_val
+    mst_matrix = hcat([e[1] for e in mst],[e[2] for e in mst],[e[3] for e in mst])
+    return mst_matrix,opt_val
 end
 
