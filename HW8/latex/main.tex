@@ -1,0 +1,191 @@
+\documentclass{article}
+\usepackage{graphicx} 
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[ruled,vlined]{algorithm2e}
+\title{6104_HW8}
+\author{Odysseus Zhang}
+\date{April 2026}
+
+\begin{document}
+\paragraph{Question 1. The construction of subproblems.} 
+\section{(a)}
+ Let \(r\in V\) be an arbitrary root of the tree \(T\). For any \(u\in V\), let \(T_u\) be the subtree rooted at \(u\).
+
+Define
+\[
+I(u)=\text{the maximum total weight of an independent set in }T_u\text{ subject to }u\text{ being included,}
+\]
+\[
+O(u)=\text{the maximum total weight of an independent set in }T_u\text{ subject to }u\text{ being excluded.}
+\]
+
+The reason for introducing these two states is that if we choose a node, then we cannot choose any of its children; if we do not choose it, then each child subtree may independently choose the better of including or excluding its root.
+
+\medskip
+
+\section*{(b)} The original problem is the maximum-weight independent set on the entire tree \(T\). Since we choose the root of \(T\) to be \(r\), the subtree \(T_r\) is the whole tree. For the root \(r\), there are only two possibilities: either \(r\) is included or \(r\) is excluded. Hence, the optimal value of the original problem is
+\[
+\max\{I(r),O(r)\}.
+\]
+Therefore, the original problem is contained in our subproblems.
+
+\medskip
+
+\section*{(c)} For every node \(u\in V\), we define two subproblems, \(I(u)\) and \(O(u)\). Since \(|V|=n\), the total number of subproblems is
+\[
+2n=O(n).
+\]
+
+\medskip
+
+\section*{(d)}
+We now prove that these subproblems satisfy the optimal substructure property and derive the recurrence.
+\\
+We claim that for every node \(u\),
+\begin{itemize}
+    \item \(I(u)\) is the maximum total weight of an independent set in \(T_u\) in which \(u\) is chosen;
+    \item \(O(u)\) is the maximum total weight of an independent set in \(T_u\) in which \(u\) is not chosen.
+\end{itemize}
+
+We prove this by induction on the height of the subtree \(T_u\).
+
+\medskip
+
+\emph{Base case.} Suppose \(u\) is a leaf. Then \(u\) has no children.
+\begin{itemize}
+    \item If \(u\) is chosen, then the only possible choice is \(u\) itself, so
+    \[
+    I(u)=v_u.
+    \]
+    \item If \(u\) is not chosen, then no vertex in \(T_u\) contributes any weight, so
+    \[
+    O(u)=0.
+    \]
+\end{itemize}
+Thus the claim holds for leaf nodes.
+
+\medskip
+
+\emph{Inductive step.} Assume the claim holds for all smaller child subtrees of \(T_u\). Let \(C(u)\) denote the set of children of \(u\).
+
+\begin{itemize}
+    \item If \(u\) is chosen, then none of its children can be chosen, because every child is adjacent to \(u\). Therefore each child subtree rooted at \(w\in C(u)\) contributes exactly \(O(w)\). Hence,
+    \[
+    I(u)=v_u+\sum_{w\in C(u)} O(w).
+    \]
+
+    \item If \(u\) is not chosen, then each child subtree can independently choose the better of including or excluding its root. Therefore each child subtree rooted at \(w\in C(u)\) contributes
+    \[
+    \max\{I(w),O(w)\}.
+    \]
+    Hence,
+    \[
+    O(u)=\sum_{w\in C(u)} \max\{I(w),O(w)\}.
+    \]
+\end{itemize}
+
+Since each child subtree is smaller than \(T_u\), by the inductive hypothesis the values \(I(w)\) and \(O(w)\) are already correct optimal values. Therefore, the recurrence above computes the correct optimal values for \(u\).
+
+Thus, by induction, the claim holds for every subtree. Hence the subproblems have the optimal substructure property, and the recurrence relations are
+\[
+I(u)=v_u+\sum_{w\in C(u)} O(w),
+\qquad
+O(u)=\sum_{w\in C(u)} \max\{I(w),O(w)\}.
+\]
+
+\section*{2. Algorithm}
+\begin{algorithm}[H]
+\caption{\textsc{MaxIndSetTree}$(T=(V,E),v)$}
+\KwIn{A tree $T=(V,E)$; a nonnegative weight $v[u]$ for each vertex $u\in V$}
+\KwOut{The maximum total weight of an independent set in $T$}
+
+Choose arbitrary root $r\in V$\;
+
+For each $u\in V${
+    $I[u]\gets 0$\;
+    $O[u]\gets 0$\;
+}
+
+\SetKwProg{Proc}{Function}{}{}
+\Proc{\textsc{MIS}$(u,\mathrm{parent})$}{
+    $I[u]\gets v[u]$\;
+    $O[u]\gets 0$\;
+
+    For each $w$ adjacent to $u${
+        \If{$w\neq \mathrm{parent}$}{
+            \textsc{MIS}$(w,u)$\;
+            $I[u]\gets I[u]+O[w]$\;
+            $O[u]\gets O[u]+\max\{I[w],O[w]\}$\;
+        }
+    }
+}
+
+\textsc{MIS}$(r,\mathrm{null})$\;
+
+\Return $\max\{I[r],O[r]\}$\;
+\end{algorithm}
+\section*{3. Analyze Algorithm}
+
+\textbf{(a) Running time.}  
+The running time is \(O(n)\). Each node is processed exactly once, and each edge is examined only a constant number of times. Since a tree with \(n\) nodes has exactly \(n-1\) edges, the total running time is \(O(n)\).
+
+\medskip
+
+\noindent \textbf{(b) Memory requirements.}  
+The memory requirement is \(O(n)\). We store two values, \(I(u)\) and \(O(u)\), for each node, which takes \(O(n)\) space. The recursion stack is also \(O(n)\) in the worst case. So the total memory is \(O(n)\).
+
+\vspace{1em}
+\paragraph{Question 2.} Prove \textsc{Vertex-Cover} is NP-complete.
+
+\textsc{Vertex-Cover} is in NP, since given an instance $(G,k)$ and a candidate set $S\subseteq V$, we can verify in polynomial time that $|S|\le k$ and every edge has at least one endpoint in $S$.
+
+Let
+\[
+\varphi = C_1 \land C_2 \land \cdots \land C_m
+\]
+be a 3-SAT formula, where each clause has exactly $3$ literals.
+
+We construct one vertex for each literal in each clause. In total, there are $3m$ vertices. We place an edge between two vertices if and only if they come from different clauses and their corresponding literals are not negations of each other. By the standard reduction shown in class, $\varphi$ is satisfiable if and only if $G$ has a clique of size $m$.
+
+Let $H=\overline{G}$ be the complement graph of $G$. From the conclusion in class,
+\[
+S \text{ is a clique in } G \iff S \text{ is an independent set in } H.
+\]
+Therefore,
+\[
+G \text{ has a clique of size } m \iff H \text{ has an independent set of size } m.
+\]
+
+From the lemma in Lecture 12, we know
+\[
+S \text{ is an independent set in } H \iff V(H)\setminus S \text{ is a vertex cover in } H.
+\]
+Since $|V(H)|=3m$, it follows that
+\[
+H \text{ has an independent set of size } m
+\iff
+H \text{ has a vertex cover of size } 3m-m=2m.
+\]
+
+In conclusion,
+\[
+\varphi \text{ is satisfiable}
+\iff
+H \text{ has a vertex cover of size } 2m.
+\]
+
+We define the reduction by
+\[
+\varphi \mapsto (H,2m).
+\]
+Given a 3-SAT formula $\varphi$ with $m$ clauses, construct the graph $G$ as in the reduction from 3-SAT to Clique, let $H=\overline{G}$, and output the Vertex-Cover instance $(H,2m)$.
+
+This can be completed in polynomial time. Therefore,
+\[
+3\text{-SAT} \le_p \textsc{Vertex-Cover}.
+\]
+
+Since \textsc{Vertex-Cover} is in NP and $3\text{-SAT} \le_p \textsc{Vertex-Cover}$, it follows that \textsc{Vertex-Cover} is NP-complete. \qed
+
+\end{document}
