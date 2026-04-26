@@ -68,4 +68,30 @@ function bcrp_func_md(prices::Matrix{Float64},eta::Float64)
     return best_b,best_final_wealth,best_wealth_set
 end
 
-
+# We implement the univeral portfolio algorithm
+function uni_port_func(prices::Matrix{Float64},eta::Float64)
+    n,m=size(prices)
+    grid = simplex_grid_md(m,eta)
+    num = length(grid)
+    S_grid = ones(num)
+    up_wealth=ones(n)
+    b_weights=zeros(Float64,n,m)
+    b_weights[1, :] .= 1.0 ./ m
+    for t = 2:n
+        x_t = prices[t,:]./prices[t-1,:]
+        b_t = zeros(Float64,m)
+        total_S = sum(S_grid)
+        alpha = S_grid ./total_S
+        for j in 1:num
+            b_t .+=alpha[j].*grid[j]
+        end
+        up_wealth[t]=up_wealth[t-1]*dot(b_t,x_t)
+        for j in 1:num
+            S_grid[j]=S_grid[j]*dot(grid[j],x_t)
+        end
+        b_weights[t, :] = b_t
+    end
+    return up_wealth,b_weights,S_grid
+end
+        
+# 
