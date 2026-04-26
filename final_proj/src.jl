@@ -17,3 +17,55 @@ function crp_func(prices:: Matrix{Float64},b::Vector{Float64})
     return wealth
 end
 
+# Implementation on 2-dimentional simplex
+function simplex_grid_2d(eta::Float64)
+    grid = Vector{Vector{Float64}}()
+    for b1 in 0.0:eta:1.0
+        b2 =1.0-b1
+        push!(grid,[b1,b2])
+    end
+    return grid
+end
+# When m = 3,4... , we can use multiple for loops to implement it, so it's natural
+# to use the recursive function to extend the simplex function to m dimentional space
+
+# We use chosen_weights to indicate the weights that have been assigned
+# left_weights to indicate the remaining weights
+# num_left to be the number of assets that still need to be assigned
+function simplex_grid_md(m::Int,eta::Float64)
+    grid_md = Vector{Vector{Float64}}()
+    function recursive_func(chosen_weights::Vector{Float64},left_weights::Float64,num_left::Int)
+        if num_left==1
+            push!(grid_md,vcat(chosen_weights,left_weights))
+            return
+        else
+            for k in 0.0:eta:left_weights 
+        # Recursive step.
+            recursive_func(vcat(chosen_weights,k), left_weights-k,num_left-1)
+            end
+        end
+    end
+    recursive_func(Float64[], 1.0, m)
+    return grid_md
+end
+
+function bcrp_func_md(prices::Matrix{Float64},eta::Float64)
+    n,m=size(prices)
+    grid_md = simplex_grid_md(m,eta)
+    # Initialization
+    best_final_wealth = 0.0
+    best_b = Float64[]
+    best_wealth_set = Float64[]
+    for b in grid_md
+        wealth_set = crp_func(prices,b)
+        final_wealth = wealth_set[end]
+        if final_wealth > best_final_wealth
+            best_b=b
+            best_final_wealth =final_wealth
+            best_wealth_set = wealth_set
+        end
+    end
+    return best_b,best_final_wealth,best_wealth_set
+end
+
+
