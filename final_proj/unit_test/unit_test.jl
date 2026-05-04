@@ -23,6 +23,33 @@ includet("../src.jl")
             @test isapprox(wealth[2],1.25; atol=1e-8)
             @test isapprox(wealth[3],1.5625; atol=1e-8)
         end
+        @testset "CRP Corner Case" begin
+            # We test the case when all wealth are invested in one assets
+            prices = [1.0 1.0;
+            2.0 1.0;
+            4.0 1.0]
+            b_1= [1.0,0.0]
+            b_2= [0.0,1.0]
+            wealth_1 = crp_func(prices,b_1)
+            wealth_2 = crp_func(prices,b_2)
+            #  Asset 1 grows from 1 to 4
+            @test isapprox(wealth_1[end],4.0;atol=1e-8) #so the final wealth should be 4.
+            # Asset 2 remains unchanged
+            @test isapprox(wealth_2[end],1.0;atol=1e-8) #the final wealth should remain unchanged
+        @testset "CPR Boundary Case" begin
+            # We consider the case when there is only one observation. There is 
+            # no trading happens. S0= 1
+            prices_only_one = [1.0,2.0,3.0]
+            b=[1/3,1/3,1/3]
+            wealth = crp_func(prices_only_one,b)
+            @test length(wealth)==1 # Since there is only one row of prices, the wealth trajectory should = S0.
+            @test isapprox(wealth[1],1.0;atol=1e-8)
+            asset_only_one = [1.0;2.0;4.0]
+
+        end
+
+        end
+    
     end
     @testset "BCRP Function Tests" begin
         @testset "BCRP simple case" begin
@@ -39,8 +66,30 @@ includet("../src.jl")
             equal_b= [0.5,0.5]
             equal_wealth= crp_func(prices,equal_b)
             @test (best_final_wealth +1e-8)>=equal_wealth[end] # Since we allow small floating-point error
-
         end
+        @testset "BCRP corner case" begin
+        # Asset 1 keeps increasing, asset 2 stays constant, best CRP should invest all in Asset 1.
+        prices = [1.0 1.0;
+        2.0 1.0;
+        4.0 1.0]
+        eta = 0.1
+        # BCRP should choose 100% in Asset 1 and 0% in Asset 2.
+        @test isapprox(best_b[1], 1.0; atol=1e-8)
+        @test isapprox(best_b[2], 0.0; atol=1e-8)
+        @test isapprox(best_final_wealth,4.0;atol=1e-8)
+        @test isapprox(best_wealth_set[end],best_final_wealth;atol=1e-8)
+        end
+        @testset "BCRP boundary case" begin
+        # We only consider one asset in boundary case here
+        prices_one_asset = [1.0;2.0;4.0]
+        eta = 0.1
+        best_b,best_final_wealth,best_wealth_set= bcrp_func_md(prices_one_asset, eta)
+        @test length(best_b)== 1
+        @test isapprox(best_b[1],1.0;atol=1e-8)
+        @test isapprox(best_final_wealth,4.0;atol=1e-8)
+    end
+
+
     end
     @testset "Simplex Grid Function Tests" begin
         @testset "Simplx Grid simple case" begin
@@ -54,6 +103,24 @@ includet("../src.jl")
             [0.5, 0.5],
             [1.0, 0.0]]
             @test length(grid)==3
+        end
+        @testset "Simplex Grid corner case" begin
+        # The corner case we consider here is when m = 3, three portfolios are:
+        # [1,0,0], [0,1,0], and [0,0,1]
+            grid = simplex_grid_md(3, 0.5)
+            corners= [
+            [1.0,0.0,0.0],
+            [0.0,1.0,0.0],
+            [0.0,0.0,1.0]]
+            for c in corners # Check each portfolio is in the grid
+                @test any(g->all(isapprox.(g,c;atol=1e-8)),grid)
+            end
+        end
+        @testset "Simplex Grid boundary case" begin
+        # We consider the boundary case when there is only one asset [1.0] in it.
+            grid= simplex_grid_md(1,0.1)
+            @test length(grid) == 1
+            @test isapprox(grid[1][1],1.0;atol=1e-8)
         end
     end
     @testset "uni_port_func Tests" begin
