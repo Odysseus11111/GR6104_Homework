@@ -2,7 +2,7 @@
 
 This file contains the code for my GR6104 final project. It focuses on the implementation and empirical evaluation of Cover's Universal Portfolio Algorithm.
 
-##Overview
+# Overview
 
 In this project, I implement the following functions :
 
@@ -19,30 +19,30 @@ UPA is not a good choice in real life investment, due to its computational limit
 ## Apart from above, I also do: 
 
 1. **Stock data download**  
-   Downloads real stock price data from Yahoo Finance using `yfinance`.
+   Downloads real stock price data from Yahoo Finance using `YFinance`.
 
 2. **Unit tests**  
    Tests the CRP, BCRP, simplex grid, and uiversal portfolio function.
 
-3. **Runtime analysis**  
-   The expected runtime:
+3. **Replication of Cover's paper**  
+   Reproduced key examples from Cover's original paper to verify the implementation and better understand the algorithm.
+
+4. **Runtime analysis**  
+   The expected runtime of the grid-based implementation is
+
    \[
    O(TKm).
    \]
 
-   We run three sets of experiments to learn the computational complexity of the implementation since its theoretical runtime depends on three variables:
-   - \(T\): number of trading days
-   - \(K\): number of grid portfolios
-   - \(m\): number of assets
+   Here:
+   - \(T\) is the number of trading days,
+   - \(K\) is the number of grid portfolios,
+   - \(m\) is the number of assets.
 
-4. **Error plots**  
-   Plots for log regret, and the result of finer grid.
+   I ran several experiments to study the computational complexity of the implementation. Specifically, I fixed \(T\) and \(m\) while changing \(K\) in Experiment 3, and fixed \(K\) and \(m\) while changing \(T\) in Experiment 4.
 
 5. **Moderately large stock experiment**  
-   Applies our algorithm to a larger real stock data set by increasing the number of stocks and/or the time horizon.
-
-
-
+   Applies our algorithm to a larger real stock data set by increasing the number of stocks and/or the time horizon. (We use increase the stock data from 1 year to 20 years)
 
 ## Result
 
