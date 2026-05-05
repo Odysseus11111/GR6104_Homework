@@ -3,7 +3,7 @@
 using Test
 using LinearAlgebra
 using Revise
-includet("../src.jl")
+include("../src/src.jl")
 
 @testset verbose = true "Unit Test for Universal portfolio algorithm" begin
     @testset "CRP Function Tests" begin
