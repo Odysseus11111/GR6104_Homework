@@ -94,11 +94,4 @@ function uni_port_func(prices::Matrix{Float64},eta::Float64)
     return up_wealth,b_weights,S_grid
 end
         
-# Implement the log-regret function
-
-function log_regret(best_final_wealth::Float64,up_wealth::Float64,T::Int)
-    total_regret = log(best_final_wealth)-log(up_wealth)
-    average_regret =total_regret/T
-    return total_regret,average_regret
-end
 
