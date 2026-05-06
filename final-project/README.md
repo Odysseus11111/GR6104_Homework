@@ -2,6 +2,36 @@
 
 This file contains the code for my GR6104 final project. It focuses on the implementation and empirical evaluation of Cover's Universal Portfolio Algorithm.
 
+## Structure
+
+### `dataset/`
+Contains the data and data-preparation notebook.
+
+- `findata.ipynb`: downloads/prepares stock data.
+- `prices_4stocks.csv`: 4-stock price data.
+- `prices_6stocks_20years.csv`: 6-stock, 20-year price data.
+
+### `notebooks/`
+Contains experiment notebooks and generated results.
+
+- `experiment1.ipynb`–`experiment4.ipynb`: main experiments.
+- `grid_refinement_results.csv`: results for grid refinement.
+- `time_horizon_results.csv`: results for time horizon analysis.
+- `wealth_trajectories.png`: example wealth trajectory plot.
+- `plot/`: experiment plots.
+- `error_time_plot/`: runtime and error plots.
+
+### `src/`
+Contains the main Julia implementation.
+
+- `src.jl`: CRP, BCRP, simplex grid, and Universal Portfolio functions.
+
+### `unit_test/`
+Contains unit tests.
+
+- `unit_test.jl`: tests for the main functions.
+- `test_result.txt`: saved unit test output.
+
 # Overview
 
 In this project, I implement the following functions :
